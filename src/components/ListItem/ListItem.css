@@ -1,0 +1,22 @@
+.list-item {
+  background-color: #8accf1;
+  border-radius: 0 15px 15px 0;
+  border-style: solid;
+  border-width: 0 0 0 15px;
+  border-color: #4298c9;
+  margin: auto 10px;
+  min-width: 50%;
+}
+
+.list-item h1 {
+  text-align: left;
+}
+
+.list-item p {
+  text-align: center;
+}
+
+.next {
+  float: right;
+  padding-top: 10px;
+}
