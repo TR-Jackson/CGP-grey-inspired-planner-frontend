@@ -20,11 +20,10 @@
 .arrow-right {
   margin-top: 10px;
   height: 15%;
-  width: 5%;
   border-top: 25px solid transparent;
   border-bottom: 25px solid transparent;
   border-left: 15px solid #4298c9;
-  padding-right: 5px;
+  padding-right: 20px;
   cursor: pointer;
 }
 
@@ -34,5 +33,5 @@
 
 .toggle-down {
   transform: rotate(90deg);
-  margin-right: 20px;
+  margin-right: 5%;
 }
