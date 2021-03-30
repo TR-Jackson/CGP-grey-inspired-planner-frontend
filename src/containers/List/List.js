@@ -54,9 +54,9 @@ const List = (props) => {
               return (
                 <ListItem
                   key={item._id}
-                  day={item.due[0]}
+                  day={item.due[2]}
                   month={item.due[1]}
-                  year={item.due[2]}
+                  year={item.due[0]}
                   steps={item.steps}
                   title={item.title}
                   onToggle={() => onToggleHandler(list.indexOf(item))}
