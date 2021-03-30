@@ -30,6 +30,7 @@ const List = (props) => {
   }, []);
 
   const onPostHandler = (newItem) => {
+    newItem._id = Math.random().toString(16).slice(-4);
     const updatedList = [...list, newItem];
     setList(updatedList);
     setEditingItem(false);
@@ -64,14 +65,20 @@ const List = (props) => {
               );
             })
           ) : (
-            <p>No Plans Yet!</p>
+            <p className="centred">
+              <strong>No Plans Yet!</strong>
+            </p>
           )}
         </ul>
         <div className="centred">
           <Button onClick={() => setEditingItem(true)}>ADD ITEM</Button>
         </div>
         <Modal show={editingItem} modalClosed={() => setEditingItem(false)}>
-          <NewItem setIsLoading={setIsLoading} postHandler={onPostHandler} />
+          <NewItem
+            setIsLoading={setIsLoading}
+            onPostHandler={onPostHandler}
+            closeModal={() => setEditingItem(false)}
+          />
         </Modal>
       </div>
     );

@@ -17,6 +17,12 @@ const inputReducer = (state, action) => {
         ...state,
         isTouched: true,
       };
+    case "CLEAR":
+      return {
+        value: "",
+        isTouched: false,
+        isValid: false,
+      };
     default:
       return state;
   }
@@ -29,12 +35,23 @@ const Input = (props) => {
     isValid: props.initialValid || false,
   });
 
-  const { id, onInput, stepId } = props;
+  useEffect(() => {
+    console.log(inputState);
+  }, [inputState]);
+
+  const { id, onInput, stepId, clear, onClear } = props;
   const { value, isValid } = inputState;
 
   useEffect(() => {
     onInput(id, value, isValid, stepId);
   }, [id, value, isValid, onInput, stepId]);
+
+  useEffect(() => {
+    dispatch({
+      type: "CLEAR",
+    });
+    onClear();
+  }, [clear, onClear]);
 
   const changeHandler = (event) => {
     dispatch({
@@ -72,6 +89,7 @@ const Input = (props) => {
       <DatePicker
         onChange={dateChangedHandler}
         selected={inputState.value && new Date(parseInt(inputState.value))}
+        popperPlacement="top-start"
       />
     ) : (
       <textarea
@@ -99,4 +117,4 @@ const Input = (props) => {
   );
 };
 
-export default Input;
+export default React.memo(Input);
