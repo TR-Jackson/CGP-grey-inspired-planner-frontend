@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import axios from "../../axios-planner";
 
 import Input from "../../components/FormElements/Input";
@@ -34,10 +34,6 @@ const NewItem = (props) => {
     },
   });
 
-  useEffect(() => {
-    console.log("formState: ", formState);
-  }, [formState]);
-
   const itemSubmitHandler = (event) => {
     event.preventDefault();
     const form = {};
@@ -47,6 +43,8 @@ const NewItem = (props) => {
     axios
       .post("/add-item", form)
       .then((result) => {
+        form._id = result.data._id;
+        console.log(form);
         props.closeModal();
         props.onPostHandler(form);
         setFormData(
@@ -66,7 +64,6 @@ const NewItem = (props) => {
           },
           false
         );
-        console.log("cleared form input");
         setClearInputs(true);
       })
       .catch((err) => {
@@ -96,7 +93,6 @@ const NewItem = (props) => {
             .map((value, index) => {
               return index;
             });
-          console.log("newCount: ", newCount);
           setStepsCount(newCount);
         }
         break;
@@ -174,4 +170,4 @@ const NewItem = (props) => {
   );
 };
 
-export default React.memo(NewItem);
+export default NewItem;

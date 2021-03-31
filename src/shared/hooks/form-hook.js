@@ -12,7 +12,6 @@ const checkFormValidity = (state, action) => {
       formIsValid = formIsValid && state.inputs[inputId].isValid;
     }
   }
-  // console.log("form is valid: ", formIsValid);
   return formIsValid;
 };
 
@@ -48,7 +47,6 @@ const formReducer = (state, action) => {
       const updatedArr = state.inputs[action.inputId].value;
       updatedArr.splice(-1, 1);
       const arrIsValid = validate(updatedArr, action.validators);
-      console.log("updatedArr: ", updatedArr);
       const updatedForm = {
         ...state,
         inputs: {
@@ -59,7 +57,6 @@ const formReducer = (state, action) => {
           },
         },
       };
-      console.log("updatedForm: ", updatedForm);
       action.isValid = arrIsValid;
       updatedForm.isValid = checkFormValidity(updatedForm, action);
       return updatedForm;

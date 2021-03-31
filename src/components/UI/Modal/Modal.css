@@ -5,14 +5,23 @@
   width: 70%;
   border: 1px solid #ccc;
   box-shadow: 1px 1px 1px black;
-  padding: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 16px;
   left: 15%;
   top: 15%;
   max-height: 70%;
   box-sizing: border-box;
   transition: all 0.3s ease-out;
-  overflow-y: scroll;
   overflow-x: hidden;
+}
+
+.scroll {
+  overflow-y: scroll;
+}
+
+.no-scroll {
+  overflow-y: hidden;
 }
 
 @media (min-width: 600px) {

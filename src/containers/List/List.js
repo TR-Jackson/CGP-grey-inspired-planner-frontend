@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../axios-planner";
 
+import DeleteItem from "../../components/DeleteItem/DeleteItem";
 import Modal from "../../components/UI/Modal/Modal";
 import NewItem from "../NewItem/NewItem";
 import ListItem from "../../components/ListItem/ListItem";
@@ -9,6 +10,7 @@ import Button from "../../components/FormElements/Button";
 import "./List.css";
 
 const List = (props) => {
+  const [isDeleting, setIsDeleting] = useState([false, null]); // show modal, itemId
   const [list, setList] = useState([]);
   const [editingItem, setEditingItem] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,10 +32,26 @@ const List = (props) => {
   }, []);
 
   const onPostHandler = (newItem) => {
-    newItem._id = Math.random().toString(16).slice(-4);
     const updatedList = [...list, newItem];
     setList(updatedList);
     setEditingItem(false);
+  };
+
+  const onDeleteHandler = () => {
+    axios
+      .post("/delete-item", { id: isDeleting[1] })
+      .then((result) => {
+        const updatedList = list.filter((item) => {
+          console.log(item._id, !(item._id === isDeleting[1]));
+          return !(item._id === isDeleting[1]);
+        });
+        console.log(updatedList);
+        setList(updatedList);
+        setIsDeleting([false, null]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onToggleHandler = (index) => {
@@ -61,6 +79,7 @@ const List = (props) => {
                   title={item.title}
                   onToggle={() => onToggleHandler(list.indexOf(item))}
                   expanded={isExpanded[list.indexOf(item)]}
+                  onDelete={() => setIsDeleting([true, item._id])}
                 />
               );
             })
@@ -73,12 +92,22 @@ const List = (props) => {
         <div className="centred">
           <Button onClick={() => setEditingItem(true)}>ADD ITEM</Button>
         </div>
-        <Modal show={editingItem} modalClosed={() => setEditingItem(false)}>
+        <Modal
+          scroll
+          show={editingItem}
+          modalClosed={() => setEditingItem(false)}
+        >
           <NewItem
             setIsLoading={setIsLoading}
             onPostHandler={onPostHandler}
             closeModal={() => setEditingItem(false)}
           />
+        </Modal>
+        <Modal
+          show={isDeleting[0]}
+          modalClosed={() => setIsDeleting([false, null])}
+        >
+          <DeleteItem onClick={onDeleteHandler} />
         </Modal>
       </div>
     );

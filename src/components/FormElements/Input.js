@@ -35,10 +35,6 @@ const Input = (props) => {
     isValid: props.initialValid || false,
   });
 
-  useEffect(() => {
-    console.log(inputState);
-  }, [inputState]);
-
   const { id, onInput, stepId, clear, onClear } = props;
   const { value, isValid } = inputState;
 
@@ -117,4 +113,4 @@ const Input = (props) => {
   );
 };
 
-export default React.memo(Input);
+export default Input;

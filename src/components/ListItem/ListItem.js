@@ -1,10 +1,25 @@
 import React from "react";
 
+import DeleteIcon from "../../assets/delete-icon.png";
+import EditIcon from "../../assets/edit-icon.png";
+import TextButton from "../UI/TextButton/TextButton";
 import "./ListItem.css";
 
 const listItem = (props) => {
   return (
     <li className="list-item">
+      <div className="side-box">
+        <TextButton disabled={false} onClick={props.onDelete} tip="Delete Item">
+          <img className="icon" src={DeleteIcon} alt="D" />
+        </TextButton>
+        <TextButton
+          disabled={false}
+          onClick={() => alert("edit")}
+          tip="Edit Item"
+        >
+          <img className="icon" src={EditIcon} alt="E" />
+        </TextButton>
+      </div>
       <div className="list-item-content">
         <h1>{props.title}</h1>
         {props.expanded &&
