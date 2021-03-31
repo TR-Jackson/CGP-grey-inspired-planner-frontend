@@ -1,23 +1,25 @@
 import { useCallback, useReducer } from "react";
 
+import { validate } from "../util/validators";
 import { dateToArray } from "../util/helper-functions";
+
+const checkFormValidity = (state, action) => {
+  let formIsValid = true;
+  for (const inputId in state.inputs) {
+    if (inputId === action.inputId) {
+      formIsValid = formIsValid && action.isValid;
+    } else {
+      formIsValid = formIsValid && state.inputs[inputId].isValid;
+    }
+  }
+  return formIsValid;
+};
 
 const formReducer = (state, action) => {
   switch (action.type) {
     case "INPUT_CHANGE":
-      let formIsValid = true;
-      for (const inputId in state.inputs) {
-        if (inputId === action.inputId) {
-          formIsValid = formIsValid && action.isValid;
-        } else {
-          formIsValid = formIsValid && state.inputs[inputId].isValid;
-        }
-      }
-      console.log("action: ", action);
-      const updatedSteps = [...state.inputs[action.inputId].value];
+      const updatedSteps = state.inputs[action.inputId].value;
       if (action.stepId !== undefined) {
-        console.log("updating steps");
-        //should just use an object here but idrc
         updatedSteps[action.stepId] = action.value;
       }
       return {
@@ -34,13 +36,30 @@ const formReducer = (state, action) => {
             isValid: action.isValid,
           },
         },
-        isValid: formIsValid,
+        isValid: checkFormValidity(state, action),
       };
     case "SET_DATA":
       return {
         inputs: action.inputs,
         isValid: action.formIsValid,
       };
+    case "DELETE_ARR_ITEM":
+      const updatedArr = state.inputs[action.inputId].value;
+      updatedArr.splice(-1, 1);
+      const arrIsValid = validate(updatedArr, action.validators);
+      const updatedForm = {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.inputId]: {
+            value: updatedArr,
+            isValid: arrIsValid,
+          },
+        },
+      };
+      action.isValid = arrIsValid;
+      updatedForm.isValid = checkFormValidity(updatedForm, action);
+      return updatedForm;
     default:
       return state;
   }
@@ -70,5 +89,14 @@ export const useForm = (initialInputs, initialFormIsValid) => {
     });
   }, []);
 
-  return [formState, inputHandler, setFormData];
+  const removeArrItem = useCallback((id, validators, currCount) => {
+    dispatch({
+      type: "DELETE_ARR_ITEM",
+      inputId: id,
+      validators: validators,
+      currCount: currCount,
+    });
+  }, []);
+
+  return [formState, inputHandler, removeArrItem, setFormData];
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import axios from "../../axios-planner";
 
 import Input from "../../components/FormElements/Input";
@@ -8,11 +8,17 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
+import TextButton from "../../components/UI/TextButton/TextButton";
 import "./NewItem.css";
 
 const NewItem = (props) => {
+  const [clearInputs, setClearInputs] = useState(false);
+  const [stepValidators] = useState([
+    VALIDATOR_REQUIRE(),
+    VALIDATOR_MINLENGTH(5),
+  ]);
   const [stepsCount, setStepsCount] = useState([0]);
-  const [formState, inputHandler] = useForm({
+  const [formState, inputHandler, removeArrItem, setFormData] = useForm({
     title: {
       value: "",
       isValid: false,
@@ -28,13 +34,8 @@ const NewItem = (props) => {
     },
   });
 
-  useEffect(() => {
-    console.log(formState);
-  }, [formState]);
-
   const itemSubmitHandler = (event) => {
     event.preventDefault();
-    console.log("formState: ", formState);
     const form = {};
     Object.entries(formState.inputs).map(([key, value]) => {
       return (form[key] = value.value);
@@ -42,18 +43,68 @@ const NewItem = (props) => {
     axios
       .post("/add-item", form)
       .then((result) => {
-        console.log("posted");
-        props.modalClosed();
+        form._id = result.data._id;
+        console.log(form);
+        props.closeModal();
+        props.onPostHandler(form);
+        setFormData(
+          {
+            title: {
+              value: "",
+              isValid: false,
+            },
+            steps: {
+              value: [""],
+              isValid: false,
+            },
+            due: {
+              value: "",
+              isValid: false,
+            },
+          },
+          false
+        );
+        setClearInputs(true);
       })
       .catch((err) => {
         console.log(err);
       });
-    props.postHandler(form);
+  };
+
+  const onClear = useCallback(() => {
+    setClearInputs(false);
+  }, []);
+
+  const toggleStepCountHandler = (action, validators) => {
+    switch (action) {
+      case "ADD":
+        const newCount = new Array(stepsCount.length + 1)
+          .fill(undefined)
+          .map((value, index) => {
+            return index;
+          });
+        setStepsCount(newCount);
+        break;
+      case "REMOVE":
+        if (stepsCount.length > 1) {
+          removeArrItem("steps", validators, stepsCount);
+          const newCount = new Array(stepsCount.length - 1)
+            .fill(undefined)
+            .map((value, index) => {
+              return index;
+            });
+          setStepsCount(newCount);
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   return (
     <form className="place-form" onSubmit={itemSubmitHandler}>
       <Input
+        onClear={onClear}
         id="title"
         element="input"
         type="text"
@@ -61,35 +112,51 @@ const NewItem = (props) => {
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid title."
         onInput={inputHandler}
+        clear={clearInputs}
       />
-      <p>Steps:</p>
+      <p>
+        <strong>Steps:</strong>
+      </p>
       {stepsCount.map((i) => {
         i = stepsCount.indexOf(i);
         return (
           <Input
+            onClear={onClear}
             key={i}
             id={`steps`}
             stepId={i}
             element="textarea"
-            validators={[VALIDATOR_MINLENGTH(5)]}
+            validators={stepValidators}
             errorText="Please enter a valid step (at least 5 characters)."
             onInput={inputHandler}
+            clear={clearInputs}
           />
         );
       })}
-      <p
-        onClick={() =>
-          setStepsCount([...stepsCount, stepsCount[stepsCount.length - 1] + 1])
-        }
-      >
-        +
-      </p>
+      <div className="add-remove-buttons">
+        <TextButton
+          disabled={false}
+          onClick={() => toggleStepCountHandler("ADD")}
+          tip="Add a step"
+        >
+          <strong>+</strong>
+        </TextButton>
+        <TextButton
+          disabled={stepsCount.length > 1 ? false : true}
+          onClick={() => toggleStepCountHandler("REMOVE", stepValidators)}
+          tip="Remove a step"
+        >
+          <strong>-</strong>
+        </TextButton>
+      </div>
       <Input
+        onClear={onClear}
         id="due"
         element="date"
         label="Complete by:"
         validators={[VALIDATOR_REQUIRE()]}
         onInput={inputHandler}
+        clear={clearInputs}
       />
       <Button
         onClick={itemSubmitHandler}

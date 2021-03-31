@@ -8,7 +8,7 @@ const Modal = (props) => {
     <div>
       <Backdrop show={props.show} clicked={props.modalClosed} />
       <div
-        className="Modal"
+        className={`Modal ${props.scroll ? "scroll" : "no-scroll"}`}
         style={{
           transform: props.show ? "translateY(0)" : "translateY(-100vh)",
           opacity: props.show ? "1" : "0",
