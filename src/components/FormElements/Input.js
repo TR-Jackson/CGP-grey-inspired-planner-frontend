@@ -69,13 +69,8 @@ const Input = (props) => {
         val: initialValue,
         initValid: initialValid,
       });
-      console.log("set");
     }
   }, [initialValue, initialValid]);
-
-  useEffect(() => {
-    console.log("inputState: ", inputState);
-  }, [inputState]);
 
   const changeHandler = (event) => {
     dispatch({

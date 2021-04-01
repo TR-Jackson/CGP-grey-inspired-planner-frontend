@@ -3,7 +3,7 @@ import axios from "../../axios-planner";
 
 import DeleteItem from "../../components/DeleteItem/DeleteItem";
 import Modal from "../../components/UI/Modal/Modal";
-import NewItem from "../NewItem/NewItem";
+import UpdateItem from "../UpdateItem/UpdateItem";
 import ListItem from "../../components/ListItem/ListItem";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Button from "../../components/FormElements/Button";
@@ -12,13 +12,9 @@ import "./List.css";
 const List = (props) => {
   const [isDeleting, setIsDeleting] = useState([false, null]); // show modal, itemId
   const [list, setList] = useState([]);
-  const [editingItem, setEditingItem] = useState([false, null]);
+  const [isEditingItem, setIsEditingItem] = useState([false, null]);
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState({});
-
-  useEffect(() => {
-    console.log(editingItem);
-  }, [editingItem]);
 
   useEffect(() => {
     axios
@@ -35,10 +31,10 @@ const List = (props) => {
       });
   }, []);
 
-  const onPostHandler = (newItem) => {
-    const updatedList = [...list, newItem];
+  const onPostHandler = (UpdateItem) => {
+    const updatedList = [...list, UpdateItem];
     setList(updatedList);
-    setEditingItem(false);
+    setIsEditingItem(false);
   };
 
   const onDeleteHandler = () => {
@@ -46,10 +42,8 @@ const List = (props) => {
       .post("/delete-item", { id: isDeleting[1] })
       .then((result) => {
         const updatedList = list.filter((item) => {
-          console.log(item._id, !(item._id === isDeleting[1]));
           return !(item._id === isDeleting[1]);
         });
-        console.log(updatedList);
         setList(updatedList);
         setIsDeleting([false, null]);
       })
@@ -84,7 +78,7 @@ const List = (props) => {
                   onToggle={() => onToggleHandler(list.indexOf(item))}
                   expanded={isExpanded[list.indexOf(item)]}
                   onDelete={() => setIsDeleting([true, item._id])}
-                  onEdit={() => setEditingItem([true, item._id])}
+                  onEdit={() => setIsEditingItem([true, item._id])}
                 />
               );
             })
@@ -95,20 +89,23 @@ const List = (props) => {
           )}
         </ul>
         <div className="centred">
-          <Button onClick={() => setEditingItem([true, null])}>ADD ITEM</Button>
+          <Button onClick={() => setIsEditingItem([true, null])}>
+            ADD ITEM
+          </Button>
         </div>
         <Modal
           scroll
-          show={editingItem[0]}
-          modalClosed={() => setEditingItem([false, null])}
+          show={isEditingItem[0]}
+          modalClosed={() => setIsEditingItem([false, null])}
         >
-          <NewItem
+          <UpdateItem
             setIsLoading={setIsLoading}
             onPostHandler={onPostHandler}
             itemData={
-              editingItem[0] && list.find((item) => item._id === editingItem[1])
+              isEditingItem[0] &&
+              list.find((item) => item._id === isEditingItem[1])
             }
-            closeModal={() => setEditingItem([false, null])}
+            closeModal={() => setIsEditingItem([false, null])}
           />
         </Modal>
         <Modal

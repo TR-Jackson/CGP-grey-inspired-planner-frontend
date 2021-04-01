@@ -9,7 +9,7 @@ import {
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import TextButton from "../../components/UI/TextButton/TextButton";
-import "./NewItem.css";
+import "./UpdateItem.css";
 
 const NewItem = (props) => {
   const [clearInputs, setClearInputs] = useState(false);
@@ -39,7 +39,6 @@ const NewItem = (props) => {
   useEffect(() => {
     if (itemData) {
       const formData = {};
-      console.log(Object.entries(itemData));
       Object.entries(itemData).forEach(([key, value]) => {
         if (key !== "_id") {
           formData[key] = {};
@@ -47,14 +46,15 @@ const NewItem = (props) => {
           formData[key].isValid = true;
         }
       });
-      // console.log("formData", formData);
       setFormData(formData, true);
+      const newCount = new Array(itemData.steps.length)
+        .fill(undefined)
+        .map((value, index) => {
+          return index;
+        });
+      setStepsCount(newCount);
     }
   }, [itemData, setFormData]);
-
-  // useEffect(() => {
-  //   console.log("form state", formState);
-  // }, [formState]);
 
   const itemSubmitHandler = (event) => {
     event.preventDefault();
@@ -66,7 +66,6 @@ const NewItem = (props) => {
       .post(`/${props.value ? "update-item" : "add-item"}`, form)
       .then((result) => {
         form._id = result.data._id;
-        console.log(form);
         props.closeModal();
         props.onPostHandler(form);
         setFormData(
