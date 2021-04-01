@@ -12,11 +12,7 @@ const listItem = (props) => {
         <TextButton disabled={false} onClick={props.onDelete} tip="Delete Item">
           <img className="icon" src={DeleteIcon} alt="D" />
         </TextButton>
-        <TextButton
-          disabled={false}
-          onClick={() => alert("edit")}
-          tip="Edit Item"
-        >
+        <TextButton disabled={false} onClick={props.onEdit} tip="Edit Item">
           <img className="icon" src={EditIcon} alt="E" />
         </TextButton>
       </div>

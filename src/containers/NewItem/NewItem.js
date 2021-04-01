@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "../../axios-planner";
 
 import Input from "../../components/FormElements/Input";
@@ -24,7 +24,7 @@ const NewItem = (props) => {
       isValid: false,
     },
     steps: {
-      value: [],
+      value: [""],
       isValid: false,
     },
 
@@ -34,6 +34,28 @@ const NewItem = (props) => {
     },
   });
 
+  const { itemData } = props;
+
+  useEffect(() => {
+    if (itemData) {
+      const formData = {};
+      console.log(Object.entries(itemData));
+      Object.entries(itemData).forEach(([key, value]) => {
+        if (key !== "_id") {
+          formData[key] = {};
+          formData[key].value = value;
+          formData[key].isValid = true;
+        }
+      });
+      // console.log("formData", formData);
+      setFormData(formData, true);
+    }
+  }, [itemData, setFormData]);
+
+  // useEffect(() => {
+  //   console.log("form state", formState);
+  // }, [formState]);
+
   const itemSubmitHandler = (event) => {
     event.preventDefault();
     const form = {};
@@ -41,7 +63,7 @@ const NewItem = (props) => {
       return (form[key] = value.value);
     });
     axios
-      .post("/add-item", form)
+      .post(`/${props.value ? "update-item" : "add-item"}`, form)
       .then((result) => {
         form._id = result.data._id;
         console.log(form);
@@ -113,6 +135,8 @@ const NewItem = (props) => {
         errorText="Please enter a valid title."
         onInput={inputHandler}
         clear={clearInputs}
+        initialValue={itemData.title}
+        initialValid={itemData && true}
       />
       <p>
         <strong>Steps:</strong>
@@ -130,6 +154,8 @@ const NewItem = (props) => {
             errorText="Please enter a valid step (at least 5 characters)."
             onInput={inputHandler}
             clear={clearInputs}
+            initialValue={itemData && itemData.steps[i]}
+            initialValid={itemData && true}
           />
         );
       })}
@@ -157,6 +183,11 @@ const NewItem = (props) => {
         validators={[VALIDATOR_REQUIRE()]}
         onInput={inputHandler}
         clear={clearInputs}
+        initialValue={
+          itemData &&
+          new Date(itemData.due[0], itemData.due[1], itemData.due[2]).getTime()
+        }
+        initialValid={itemData && true}
       />
       <Button
         onClick={itemSubmitHandler}

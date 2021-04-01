@@ -12,9 +12,13 @@ import "./List.css";
 const List = (props) => {
   const [isDeleting, setIsDeleting] = useState([false, null]); // show modal, itemId
   const [list, setList] = useState([]);
-  const [editingItem, setEditingItem] = useState(false);
+  const [editingItem, setEditingItem] = useState([false, null]);
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState({});
+
+  useEffect(() => {
+    console.log(editingItem);
+  }, [editingItem]);
 
   useEffect(() => {
     axios
@@ -80,6 +84,7 @@ const List = (props) => {
                   onToggle={() => onToggleHandler(list.indexOf(item))}
                   expanded={isExpanded[list.indexOf(item)]}
                   onDelete={() => setIsDeleting([true, item._id])}
+                  onEdit={() => setEditingItem([true, item._id])}
                 />
               );
             })
@@ -90,17 +95,20 @@ const List = (props) => {
           )}
         </ul>
         <div className="centred">
-          <Button onClick={() => setEditingItem(true)}>ADD ITEM</Button>
+          <Button onClick={() => setEditingItem([true, null])}>ADD ITEM</Button>
         </div>
         <Modal
           scroll
-          show={editingItem}
-          modalClosed={() => setEditingItem(false)}
+          show={editingItem[0]}
+          modalClosed={() => setEditingItem([false, null])}
         >
           <NewItem
             setIsLoading={setIsLoading}
             onPostHandler={onPostHandler}
-            closeModal={() => setEditingItem(false)}
+            itemData={
+              editingItem[0] && list.find((item) => item._id === editingItem[1])
+            }
+            closeModal={() => setEditingItem([false, null])}
           />
         </Modal>
         <Modal

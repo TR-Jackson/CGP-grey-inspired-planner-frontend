@@ -10,7 +10,10 @@ const inputReducer = (state, action) => {
       return {
         ...state,
         value: action.val,
-        isValid: validate(action.val, action.validators),
+        isValid:
+          action.initValid !== undefined
+            ? action.initValid
+            : validate(action.val, action.validators),
       };
     case "TOUCH":
       return {
@@ -35,7 +38,15 @@ const Input = (props) => {
     isValid: props.initialValid || false,
   });
 
-  const { id, onInput, stepId, clear, onClear } = props;
+  const {
+    id,
+    onInput,
+    stepId,
+    clear,
+    onClear,
+    initialValid,
+    initialValue,
+  } = props;
   const { value, isValid } = inputState;
 
   useEffect(() => {
@@ -43,11 +54,28 @@ const Input = (props) => {
   }, [id, value, isValid, onInput, stepId]);
 
   useEffect(() => {
-    dispatch({
-      type: "CLEAR",
-    });
-    onClear();
+    if (clear) {
+      dispatch({
+        type: "CLEAR",
+      });
+      onClear();
+    }
   }, [clear, onClear]);
+
+  useEffect(() => {
+    if (initialValue) {
+      dispatch({
+        type: "CHANGE",
+        val: initialValue,
+        initValid: initialValid,
+      });
+      console.log("set");
+    }
+  }, [initialValue, initialValid]);
+
+  useEffect(() => {
+    console.log("inputState: ", inputState);
+  }, [inputState]);
 
   const changeHandler = (event) => {
     dispatch({
