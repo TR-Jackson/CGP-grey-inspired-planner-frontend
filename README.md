@@ -21,15 +21,16 @@ I have taken these ideas and methods and created a MERN Fullstack web app with t
 1.  ~~Set up basic displaying of plans and styling~~
 2.  ~~Add item functionality~~
 3.  ~~Delete item functionality~~
-4.  Edit item functionality
-5.  Ability to tag items (e.g. essential, urgent)
-6.  Filtering of the list
-7.  Notepad for rough ideas
-8.  Review system for notepad ideas
-9.  Calendar to display plans
-10. Ability to add plans to calendar
-11. Filtering for calendar
-12. TBC...
+4.  ~~Edit item functionality~~
+5.  Nested steps for displaying, editing and adding
+6.  Ability to tag items (e.g. essential, urgent)
+7.  Filtering of the list/search bar
+8.  Notepad for rough ideas
+9.  Review system for notepad ideas
+10.  Calendar to display plans
+11. Ability to add plans to calendar
+12. Filtering for calendar
+13. TBC...
 
 ## LICENCE
 
