@@ -34,7 +34,7 @@ const NewItem = (props) => {
     },
   });
 
-  const { itemData } = props;
+  const { itemData, modalIsOpen } = props;
 
   useEffect(() => {
     if (itemData) {
@@ -56,18 +56,32 @@ const NewItem = (props) => {
     }
   }, [itemData, setFormData]);
 
+  useEffect(() => {
+    if (!modalIsOpen) {
+      setClearInputs(true);
+      console.log("inputs cleared");
+    }
+  }, [modalIsOpen]);
+
   const itemSubmitHandler = (event) => {
     event.preventDefault();
     const form = {};
     Object.entries(formState.inputs).map(([key, value]) => {
       return (form[key] = value.value);
     });
+    if (itemData) {
+      form._id = itemData._id;
+    }
+    console.log(form);
     axios
-      .post(`/${props.value ? "update-item" : "add-item"}`, form)
+      .post(`/${itemData ? "update-item" : "add-item"}`, form)
       .then((result) => {
-        form._id = result.data._id;
-        props.closeModal();
-        props.onPostHandler(form);
+        if (!itemData) {
+          form._id = result.data._id;
+          props.onPostHandler("NEW", form);
+        } else {
+          props.onPostHandler("UPDATE", form);
+        }
         setFormData(
           {
             title: {
@@ -85,6 +99,7 @@ const NewItem = (props) => {
           },
           false
         );
+        props.closeModal();
         setClearInputs(true);
       })
       .catch((err) => {
@@ -134,7 +149,7 @@ const NewItem = (props) => {
         errorText="Please enter a valid title."
         onInput={inputHandler}
         clear={clearInputs}
-        initialValue={itemData.title}
+        initialValue={itemData && itemData.title}
         initialValid={itemData && true}
       />
       <p>
@@ -194,7 +209,7 @@ const NewItem = (props) => {
         disabled={!formState.isValid}
         modalClosed={props.modalClosed}
       >
-        ADD ITEM
+        {`${itemData ? "UPDATE" : "ADD"} ITEM`}
       </Button>
     </form>
   );

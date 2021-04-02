@@ -17,6 +17,10 @@ const List = (props) => {
   const [isExpanded, setIsExpanded] = useState({});
 
   useEffect(() => {
+    console.log(isEditingItem);
+  }, [isEditingItem]);
+
+  useEffect(() => {
     axios
       .get("/planner")
       .then((result) => {
@@ -31,10 +35,24 @@ const List = (props) => {
       });
   }, []);
 
-  const onPostHandler = (UpdateItem) => {
-    const updatedList = [...list, UpdateItem];
-    setList(updatedList);
-    setIsEditingItem(false);
+  const onPostHandler = (type, newItem) => {
+    const updatedList = [...list];
+    switch (type) {
+      case "NEW":
+        updatedList.push(newItem);
+        setList(updatedList);
+        break;
+      case "UPDATE":
+        console.log(newItem);
+        updatedList[
+          updatedList.findIndex((item) => item._id === newItem._id)
+        ] = newItem;
+        console.log(updatedList);
+        setList(updatedList);
+        break;
+      default:
+        break;
+    }
   };
 
   const onDeleteHandler = () => {
@@ -106,6 +124,7 @@ const List = (props) => {
               list.find((item) => item._id === isEditingItem[1])
             }
             closeModal={() => setIsEditingItem([false, null])}
+            modalIsOpen={isEditingItem[0]}
           />
         </Modal>
         <Modal
