@@ -17,22 +17,38 @@ const List = (props) => {
   const [isExpanded, setIsExpanded] = useState({});
 
   useEffect(() => {
-    console.log(isEditingItem);
-  }, [isEditingItem]);
-
-  useEffect(() => {
-    axios
-      .get("/planner")
-      .then((result) => {
-        setList(result.data);
-        const initIsExpanded = {};
-        Object.keys(result.data).map((key) => (initIsExpanded[key] = false));
-        setIsExpanded(initIsExpanded);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // axios
+    //   .get("/planner")
+    //   .then((result) => {
+    //     setList(result.data);
+    //     const initIsExpanded = {};
+    //     Object.keys(result.data).map((key) => (initIsExpanded[key] = false));
+    //     setIsExpanded(initIsExpanded);
+    //     setIsLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    setList([
+      {
+        title: "Steps Test",
+        steps: [
+          [
+            [
+              "step1",
+              [
+                ["step1", [["step1", null]]],
+                ["step1", [["step1", null]]],
+              ],
+            ],
+          ],
+          [["step2", null]],
+        ],
+        due: [2021, 3, 25],
+      },
+    ]);
+    setIsExpanded([false]);
+    setIsLoading(false);
   }, []);
 
   const onPostHandler = (type, newItem) => {

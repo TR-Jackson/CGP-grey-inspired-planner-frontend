@@ -1,5 +1,6 @@
 import React from "react";
 
+import ItemSteps from "../ItemSteps/ItemSteps";
 import DeleteIcon from "../../assets/delete-icon.png";
 import EditIcon from "../../assets/edit-icon.png";
 import TextButton from "../UI/TextButton/TextButton";
@@ -20,13 +21,8 @@ const listItem = (props) => {
         <h1>{props.title}</h1>
         {props.expanded &&
           props.steps.map((step) => {
-            return (
-              <ul key={props.steps.indexOf(step)}>
-                <li>
-                  #{props.steps.indexOf(step) + 1} {step}
-                </li>
-              </ul>
-            );
+            console.log("mainstep: ", step);
+            return <ItemSteps steps={step} key={props.steps.indexOf(step)} />;
           })}
         <p>
           Due: {props.day}/{props.month}/{props.year}
