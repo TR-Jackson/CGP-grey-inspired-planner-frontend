@@ -18,7 +18,7 @@ const checkFormValidity = (state, action) => {
 const formReducer = (state, action) => {
   switch (action.type) {
     case "INPUT_CHANGE":
-      const updatedSteps = state.inputs[action.inputId].value;
+      const updatedSteps = [...state.inputs[action.inputId].value];
       if (action.stepId !== undefined) {
         updatedSteps[action.stepId] = action.value;
       }

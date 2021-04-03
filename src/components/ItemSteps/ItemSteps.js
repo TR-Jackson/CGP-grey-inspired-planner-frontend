@@ -6,7 +6,7 @@ import "./ItemSteps.css";
 const ItemSteps = (props) => {
   console.log("itemsteps: ", props.step);
   return (
-    <>
+    <div className="steps">
       <ul>
         {props.steps.map((step) => (
           <li>
@@ -14,7 +14,7 @@ const ItemSteps = (props) => {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 
