@@ -1,3 +1,21 @@
 .main {
   display: flex;
+  width: 10%;
+}
+
+.expand-arrow {
+  box-sizing: border-box;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 5px solid #4298c9;
+  cursor: pointer;
+  margin-top: 7px;
+}
+
+.toggle-up {
+  transform: rotate(0);
+}
+
+.toggle-down {
+  transform: rotate(90deg);
 }
