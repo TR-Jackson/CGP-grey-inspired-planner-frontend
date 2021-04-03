@@ -22,9 +22,13 @@ const listItem = (props) => {
         {props.expanded &&
           props.steps.map((step) => {
             console.log("mainstep: ", step);
-            return <ItemSteps steps={step} key={props.steps.indexOf(step)} />;
+            return (
+              <div className="steps">
+                <ItemSteps steps={step} key={props.steps.indexOf(step)} />
+              </div>
+            );
           })}
-        <p>
+        <p className="due">
           Due: {props.day}/{props.month}/{props.year}
         </p>
       </div>
