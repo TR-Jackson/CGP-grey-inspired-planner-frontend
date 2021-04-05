@@ -18,10 +18,23 @@ const checkFormValidity = (state, action) => {
 const formReducer = (state, action) => {
   switch (action.type) {
     case "INPUT_CHANGE":
-      const updatedSteps = [...state.inputs[action.inputId].value];
-      if (action.stepId !== undefined) {
-        updatedSteps[action.stepId] = action.value;
+      // const updatedSteps = [...state.inputs[action.inputId].value];
+      // if (action.stepId !== undefined) {
+      //   updatedSteps[action.stepId] = action.value;
+      // }
+      let updatedArray;
+      if (action.inputCoord) {
+        updatedArray = [...state.inputs[action.inputId].value];
+        let toEval = "updatedArray";
+        action.inputCoord.forEach((i) => {
+          toEval.concat("[");
+          toEval.concat(i);
+          toEval.concat("]");
+        });
+
+        console.log(toEval);
       }
+
       return {
         ...state,
         inputs: {
@@ -31,7 +44,7 @@ const formReducer = (state, action) => {
               action.inputId === "due"
                 ? dateToArray(action.value)
                 : action.inputId === "steps"
-                ? updatedSteps
+                ? updatedArray
                 : action.value,
             isValid: action.isValid,
           },
@@ -71,13 +84,13 @@ export const useForm = (initialInputs, initialFormIsValid) => {
     isValid: initialFormIsValid,
   });
 
-  const inputHandler = useCallback((id, value, isValid, stepId) => {
+  const inputHandler = useCallback((id, value, isValid, inputCoord) => {
     dispatch({
       type: "INPUT_CHANGE",
       value: value,
       isValid: isValid,
       inputId: id,
-      stepId: stepId,
+      inputCoord: inputCoord,
     });
   }, []);
 

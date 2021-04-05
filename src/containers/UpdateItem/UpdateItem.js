@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "../../axios-planner";
 
-import Input from "../../components/FormElements/Input";
-import Button from "../../components/FormElements/Button";
+import NestedInputs from "../../components/FormElements/Input/NestedInputs/NestedInputs";
+import Input from "../../components/FormElements/Input/Input";
+import Button from "../../components/FormElements/Button/Button";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -24,7 +25,7 @@ const NewItem = (props) => {
       isValid: false,
     },
     steps: {
-      value: [""],
+      value: [["", null]],
       isValid: false,
     },
 
@@ -33,6 +34,10 @@ const NewItem = (props) => {
       isValid: false,
     },
   });
+
+  useEffect(() => {
+    console.log(formState);
+  }, [formState]);
 
   const { itemData, modalIsOpen } = props;
 
@@ -59,7 +64,6 @@ const NewItem = (props) => {
   useEffect(() => {
     if (!modalIsOpen) {
       setClearInputs(true);
-      console.log("inputs cleared");
     }
   }, [modalIsOpen]);
 
@@ -89,7 +93,7 @@ const NewItem = (props) => {
               isValid: false,
             },
             steps: {
-              value: [""],
+              value: [["", null]],
               isValid: false,
             },
             due: {
@@ -155,24 +159,34 @@ const NewItem = (props) => {
       <p>
         <strong>Steps:</strong>
       </p>
-      {stepsCount.map((i) => {
+      {/* {stepsCount.map((i) => {
         i = stepsCount.indexOf(i);
         return (
-          <Input
-            onClear={onClear}
-            key={i}
-            id={`steps`}
-            stepId={i}
-            element="textarea"
-            validators={stepValidators}
-            errorText="Please enter a valid step (at least 5 characters)."
-            onInput={inputHandler}
-            clear={clearInputs}
-            initialValue={itemData && itemData.steps[i]}
-            initialValid={itemData && true}
-          />
+          <>
+            <Input
+              onClear={onClear}
+              key={i}
+              id={`steps`}
+              stepId={i}
+              element="textarea"
+              validators={stepValidators}
+              errorText="Please enter a valid step (at least 5 characters)."
+              onInput={inputHandler}
+              clear={clearInputs}
+              initialValue={itemData && itemData.steps[i]}
+              initialValid={itemData && true}
+            />
+          </>
         );
-      })}
+      })} */}
+      <NestedInputs
+        formState={formState.inputs.steps.value}
+        id="steps"
+        element="textarea"
+        type="text"
+        onInput={inputHandler}
+        errorText={"Enter a valid step (min. 5 characters)"}
+      />
       <div className="add-remove-buttons">
         <TextButton
           disabled={false}

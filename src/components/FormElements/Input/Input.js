@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from "react";
 import DatePicker from "react-datepicker";
 
-import { validate } from "../../shared/util/validators";
+import { validate } from "../../../shared/util/validators";
 import "./Input.css";
 
 const inputReducer = (state, action) => {
@@ -41,17 +41,20 @@ const Input = (props) => {
   const {
     id,
     onInput,
-    stepId,
+    inputCoord,
     clear,
     onClear,
     initialValid,
     initialValue,
+    currValue,
   } = props;
   const { value, isValid } = inputState;
 
   useEffect(() => {
-    onInput(id, value, isValid, stepId);
-  }, [id, value, isValid, onInput, stepId]);
+    if (currValue !== value) {
+      onInput(id, value, isValid, inputCoord);
+    }
+  }, [id, value, isValid, onInput, inputCoord, currValue]);
 
   useEffect(() => {
     if (clear) {
@@ -73,11 +76,13 @@ const Input = (props) => {
   }, [initialValue, initialValid]);
 
   const changeHandler = (event) => {
-    dispatch({
-      type: "CHANGE",
-      val: event.target.value,
-      validators: props.validators,
-    });
+    if (props.currValue !== event.target.value) {
+      dispatch({
+        type: "CHANGE",
+        val: event.target.value,
+        validators: props.validators,
+      });
+    }
   };
 
   const dateChangedHandler = (newDate) => {
@@ -97,6 +102,7 @@ const Input = (props) => {
   const element =
     props.element === "input" && props.type !== "date" ? (
       <input
+        coord={props.coord}
         id={props.id}
         type={props.type}
         placeholder={props.placeholder}

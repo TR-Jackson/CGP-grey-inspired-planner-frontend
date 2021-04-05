@@ -1,6 +1,6 @@
 import React from "react";
 
-import Button from "../FormElements/Button";
+import Button from "../FormElements/Button/Button";
 import "./DeleteItem.css";
 
 const DeleteItem = (props) => {
