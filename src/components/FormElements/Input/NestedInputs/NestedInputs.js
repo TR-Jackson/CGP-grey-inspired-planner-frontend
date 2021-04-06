@@ -3,8 +3,6 @@ import React from "react";
 import NestedInput from "./NestedInput/NestedInput";
 import "./NestedInputs.css";
 
-// props is formstate.steps.value = [["", null], ["", null]]
-
 const NestedInputs = (props) => {
   return (
     <div>

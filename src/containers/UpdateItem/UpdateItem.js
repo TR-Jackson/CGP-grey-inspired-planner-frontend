@@ -18,7 +18,7 @@ const NewItem = (props) => {
     VALIDATOR_REQUIRE(),
     VALIDATOR_MINLENGTH(5),
   ]);
-  const [stepsCount, setStepsCount] = useState([0]);
+  // const [stepsCount, setStepsCount] = useState([0]);
   const [
     formState,
     inputHandler,
@@ -58,12 +58,12 @@ const NewItem = (props) => {
         }
       });
       setFormData(formData, true);
-      const newCount = new Array(itemData.steps.length)
-        .fill(undefined)
-        .map((value, index) => {
-          return index;
-        });
-      setStepsCount(newCount);
+      // const newCount = new Array(itemData.steps.length)
+      //   .fill(undefined)
+      //   .map((value, index) => {
+      //     return index;
+      //   });
+      // setStepsCount(newCount);
     }
   }, [itemData, setFormData]);
 
@@ -120,13 +120,14 @@ const NewItem = (props) => {
     setClearInputs(false);
   }, []);
 
-  const toggleStepCountHandler = (action, validators) => {
+  const editInputs = (action, validators, coord) => {
+    console.log("coord: ", coord);
     switch (action) {
       case "ADD":
         addArrItem("steps");
         break;
       case "REMOVE":
-        removeArrItem("steps", stepValidators, [1]);
+        removeArrItem("steps", validators, coord);
         break;
       default:
         break;
@@ -151,26 +152,6 @@ const NewItem = (props) => {
       <p>
         <strong>Steps:</strong>
       </p>
-      {/* {stepsCount.map((i) => {
-        i = stepsCount.indexOf(i);
-        return (
-          <>
-            <Input
-              onClear={onClear}
-              key={i}
-              id={`steps`}
-              stepId={i}
-              element="textarea"
-              validators={stepValidators}
-              errorText="Please enter a valid step (at least 5 characters)."
-              onInput={inputHandler}
-              clear={clearInputs}
-              initialValue={itemData && itemData.steps[i]}
-              initialValid={itemData && true}
-            />
-          </>
-        );
-      })} */}
       <NestedInputs
         formState={formState.inputs.steps.value}
         id="steps"
@@ -179,18 +160,20 @@ const NewItem = (props) => {
         onInput={inputHandler}
         errorText={"Enter a valid step (min. 5 characters)"}
         validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
+        editInput={editInputs}
       />
       <div className="add-remove-buttons">
-        <TextButton
-          disabled={false}
-          onClick={() => toggleStepCountHandler("ADD")}
-          tip="Add a step"
-        >
+        <TextButton onClick={() => editInputs("ADD")} tip="Add a step">
           <strong>+</strong>
         </TextButton>
         <TextButton
-          // disabled={stepsCount.length > 1 ? false : true}
-          onClick={() => toggleStepCountHandler("REMOVE", stepValidators)}
+          disabled={formState.inputs.steps.value.length === 0}
+          onClick={() =>
+            formState.inputs.steps.value.length !== 0 &&
+            editInputs("REMOVE", stepValidators, [
+              formState.inputs.steps.value.length - 1,
+            ])
+          }
           tip="Remove a step"
         >
           <strong>-</strong>

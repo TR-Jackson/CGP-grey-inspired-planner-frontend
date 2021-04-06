@@ -88,7 +88,7 @@ const formReducer = (state, action) => {
       });
 
       // eslint-disable-next-line
-      eval(arrayRef.concat(`.splice(-1, ${index})`));
+      eval(arrayRef.concat(`.splice(${index})`));
 
       const arrIsValid = validate(
         updatedArray,
@@ -106,6 +106,7 @@ const formReducer = (state, action) => {
           },
         },
       };
+      console.log("updatedArray: ", updatedArray);
       action.isValid = arrIsValid;
       updatedForm.isValid = checkFormValidity(updatedForm, action);
       return updatedForm;
