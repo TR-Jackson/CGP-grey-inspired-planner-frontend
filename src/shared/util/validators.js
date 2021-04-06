@@ -20,50 +20,79 @@ export const VALIDATOR_MIN = (val) => ({ type: VALIDATOR_TYPE_MIN, val: val });
 export const VALIDATOR_MAX = (val) => ({ type: VALIDATOR_TYPE_MAX, val: val });
 export const VALIDATOR_EMAIL = () => ({ type: VALIDATOR_TYPE_EMAIL });
 
-export const validate = (value, validators) => {
+export const validate = (value, validators, action, allow) => {
   let isValid = true;
-  if (typeof value === "object") {
-    for (const item of value) {
-      for (const validator of validators) {
-        if (validator.type === VALIDATOR_TYPE_REQUIRE) {
-          isValid = isValid && item.trim().length > 0;
+  let array = [...value];
+
+  switch (action) {
+    case "FLAT":
+      console.log("flattening");
+      let prev_length = 1;
+      let curr_length = array.length;
+      while (curr_length > prev_length) {
+        array = array.flat();
+        prev_length = curr_length;
+        curr_length = array.length;
+      }
+      break;
+    default:
+      break;
+  }
+  console.log("validating: ", array);
+  if (Array.isArray(array)) {
+    console.log("validating an array");
+    for (const item of array) {
+      if (typeof item === "string") {
+        for (const validator of validators) {
+          if (validator.type === VALIDATOR_TYPE_REQUIRE) {
+            isValid = isValid && (item.trim().length > 0 || item === allow);
+          }
+          if (validator.type === VALIDATOR_TYPE_MINLENGTH) {
+            isValid =
+              isValid &&
+              (item.trim().length >= validator.val || item === allow);
+          }
+          if (validator.type === VALIDATOR_TYPE_MAXLENGTH) {
+            isValid =
+              isValid &&
+              (item.trim().length <= validator.val || item === allow);
+          }
+          if (validator.type === VALIDATOR_TYPE_MIN) {
+            isValid = isValid && (+item >= validator.val || item === allow);
+          }
+          if (validator.type === VALIDATOR_TYPE_MAX) {
+            isValid = isValid && (+item <= validator.val || item === allow);
+          }
+          if (validator.type === VALIDATOR_TYPE_EMAIL) {
+            isValid =
+              isValid && (/^\S+@\S+\.\S+$/.test(item) || item === allow);
+          }
         }
-        if (validator.type === VALIDATOR_TYPE_MINLENGTH) {
-          isValid = isValid && item.trim().length >= validator.val;
-        }
-        if (validator.type === VALIDATOR_TYPE_MAXLENGTH) {
-          isValid = isValid && item.trim().length <= validator.val;
-        }
-        if (validator.type === VALIDATOR_TYPE_MIN) {
-          isValid = isValid && +item >= validator.val;
-        }
-        if (validator.type === VALIDATOR_TYPE_MAX) {
-          isValid = isValid && +item <= validator.val;
-        }
-        if (validator.type === VALIDATOR_TYPE_EMAIL) {
-          isValid = isValid && /^\S+@\S+\.\S+$/.test(item);
-        }
+      } else {
+        isValid = false || item === allow;
       }
     }
   } else if (typeof value === "string") {
     for (const validator of validators) {
       if (validator.type === VALIDATOR_TYPE_REQUIRE) {
-        isValid = isValid && value.trim().length > 0;
+        isValid = isValid && (value.trim().length > 0 || value === allow);
       }
       if (validator.type === VALIDATOR_TYPE_MINLENGTH) {
-        isValid = isValid && value.trim().length >= validator.val;
+        isValid =
+          isValid && (value.trim().length >= validator.val || value === allow);
       }
       if (validator.type === VALIDATOR_TYPE_MAXLENGTH) {
-        isValid = isValid && value.trim().length <= validator.val;
+        isValid =
+          isValid && (value.trim().length <= validator.val || value === allow);
       }
       if (validator.type === VALIDATOR_TYPE_MIN) {
-        isValid = isValid && +value >= validator.val;
+        isValid = isValid && (+value >= validator.val || value === allow);
       }
       if (validator.type === VALIDATOR_TYPE_MAX) {
-        isValid = isValid && +value <= validator.val;
+        isValid = isValid && (+value <= validator.val || value === allow);
       }
       if (validator.type === VALIDATOR_TYPE_EMAIL) {
-        isValid = isValid && /^\S+@\S+\.\S+$/.test(value);
+        isValid = isValid && (/^\S+@\S+\.\S+$/.test(value) || value === allow);
       }
     }
   }

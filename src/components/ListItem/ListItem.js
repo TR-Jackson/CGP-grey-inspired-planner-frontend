@@ -21,7 +21,6 @@ const listItem = (props) => {
         <h1>{props.title}</h1>
         {props.expanded &&
           props.steps.map((step) => {
-            console.log("mainstep: ", step);
             return (
               <div className="steps">
                 <ItemSteps steps={step} key={props.steps.indexOf(step)} />

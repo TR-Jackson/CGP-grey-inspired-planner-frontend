@@ -17,18 +17,13 @@ const checkFormValidity = (state, action) => {
 
 const formReducer = (state, action) => {
   let updatedArray;
+  let arrayRef = "updatedArray";
   switch (action.type) {
     case "INPUT_CHANGE":
-      // const updatedSteps = [...state.inputs[action.inputId].value];
-      // if (action.stepId !== undefined) {
-      //   updatedSteps[action.stepId] = action.value;
-      // }
       if (action.inputCoord) {
         updatedArray = JSON.parse(
           JSON.stringify(state.inputs[action.inputId].value)
         );
-        console.log("updatedArray: ", updatedArray);
-        let arrayRef = "updatedArray";
         action.inputCoord.forEach((i) => {
           arrayRef = arrayRef.concat("[", i, "][0]");
         });
@@ -62,16 +57,14 @@ const formReducer = (state, action) => {
       updatedArray = JSON.parse(
         JSON.stringify(state.inputs[action.inputId].value)
       );
-      // let arrayRef = "updatedArray";
 
-      // action.inputCoord &&
-      //   action.inputCoord.forEach((i) => {
-      //     arrayRef = arrayRef.concat("[", i, "]");
-      //   });
+      action.inputCoord &&
+        action.inputCoord.forEach((i) => {
+          arrayRef = arrayRef.concat("[", i, "]");
+        });
 
-      // // eslint-disable-next-line
-      // eval(arrayRef.concat('.push(["", null])'));
-      updatedArray.push(["", null]);
+      // eslint-disable-next-line
+      eval(arrayRef.concat('.push(["", null])'));
       return {
         ...state,
         inputs: {
@@ -84,9 +77,25 @@ const formReducer = (state, action) => {
       };
 
     case "DELETE_ARR_ITEM":
-      updatedArray = state.inputs[action.inputId].value;
-      updatedArray.splice(-1, 1);
-      const arrIsValid = validate(updatedArray, action.validators);
+      updatedArray = JSON.parse(
+        JSON.stringify(state.inputs[action.inputId].value)
+      );
+
+      const coord = [...action.inputCoord];
+      const index = coord.pop();
+      coord.forEach((i) => {
+        arrayRef = arrayRef.concat("[", i, "]");
+      });
+
+      // eslint-disable-next-line
+      eval(arrayRef.concat(`.splice(-1, ${index})`));
+
+      const arrIsValid = validate(
+        updatedArray,
+        action.validators,
+        "FLAT",
+        null
+      );
       const updatedForm = {
         ...state,
         inputs: {
@@ -129,12 +138,12 @@ export const useForm = (initialInputs, initialFormIsValid) => {
     });
   }, []);
 
-  const removeArrItem = useCallback((id, validators, currCount) => {
+  const removeArrItem = useCallback((id, validators, inputCoord) => {
     dispatch({
       type: "DELETE_ARR_ITEM",
       inputId: id,
       validators: validators,
-      currCount: currCount,
+      inputCoord: inputCoord,
     });
   }, []);
 

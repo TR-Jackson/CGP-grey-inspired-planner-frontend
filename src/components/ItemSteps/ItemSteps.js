@@ -4,7 +4,6 @@ import ItemStep from "./ItemStep/ItemStep";
 import "./ItemSteps.css";
 
 const ItemSteps = (props) => {
-  console.log("itemsteps: ", props.step);
   return (
     <div className="steps">
       <ul>

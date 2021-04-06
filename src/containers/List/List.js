@@ -60,11 +60,9 @@ const List = (props) => {
         setList(updatedList);
         break;
       case "UPDATE":
-        console.log(newItem);
         updatedList[
           updatedList.findIndex((item) => item._id === newItem._id)
         ] = newItem;
-        console.log(updatedList);
         setList(updatedList);
         break;
       default:

@@ -82,7 +82,6 @@ const NewItem = (props) => {
     if (itemData) {
       form._id = itemData._id;
     }
-    console.log(form);
     axios
       .post(`/${itemData ? "update-item" : "add-item"}`, form)
       .then((result) => {
@@ -124,24 +123,10 @@ const NewItem = (props) => {
   const toggleStepCountHandler = (action, validators) => {
     switch (action) {
       case "ADD":
-        // const newCount = new Array(stepsCount.length + 1)
-        //   .fill(undefined)
-        //   .map((value, index) => {
-        //     return index;
-        //   });
-        // setStepsCount(newCount);
-        addArrItem("steps", [0]);
+        addArrItem("steps");
         break;
       case "REMOVE":
-        if (stepsCount.length > 1) {
-          removeArrItem("steps", validators, stepsCount);
-          const newCount = new Array(stepsCount.length - 1)
-            .fill(undefined)
-            .map((value, index) => {
-              return index;
-            });
-          setStepsCount(newCount);
-        }
+        removeArrItem("steps", stepValidators, [1]);
         break;
       default:
         break;
@@ -186,7 +171,6 @@ const NewItem = (props) => {
           </>
         );
       })} */}
-      {console.log(formState)}
       <NestedInputs
         formState={formState.inputs.steps.value}
         id="steps"
@@ -205,7 +189,7 @@ const NewItem = (props) => {
           <strong>+</strong>
         </TextButton>
         <TextButton
-          disabled={stepsCount.length > 1 ? false : true}
+          // disabled={stepsCount.length > 1 ? false : true}
           onClick={() => toggleStepCountHandler("REMOVE", stepValidators)}
           tip="Remove a step"
         >
