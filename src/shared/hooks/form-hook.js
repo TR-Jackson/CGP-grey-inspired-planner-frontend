@@ -16,13 +16,13 @@ const checkFormValidity = (state, action) => {
 };
 
 const formReducer = (state, action) => {
+  let updatedArray;
   switch (action.type) {
     case "INPUT_CHANGE":
       // const updatedSteps = [...state.inputs[action.inputId].value];
       // if (action.stepId !== undefined) {
       //   updatedSteps[action.stepId] = action.value;
       // }
-      let updatedArray;
       if (action.inputCoord) {
         updatedArray = JSON.parse(
           JSON.stringify(state.inputs[action.inputId].value)
@@ -58,16 +58,41 @@ const formReducer = (state, action) => {
         inputs: action.inputs,
         isValid: action.formIsValid,
       };
+    case "ADD_ARR_ITEM":
+      updatedArray = JSON.parse(
+        JSON.stringify(state.inputs[action.inputId].value)
+      );
+      // let arrayRef = "updatedArray";
+
+      // action.inputCoord &&
+      //   action.inputCoord.forEach((i) => {
+      //     arrayRef = arrayRef.concat("[", i, "]");
+      //   });
+
+      // // eslint-disable-next-line
+      // eval(arrayRef.concat('.push(["", null])'));
+      updatedArray.push(["", null]);
+      return {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.inputId]: {
+            value: updatedArray,
+            isValid: false,
+          },
+        },
+      };
+
     case "DELETE_ARR_ITEM":
-      const updatedArr = state.inputs[action.inputId].value;
-      updatedArr.splice(-1, 1);
-      const arrIsValid = validate(updatedArr, action.validators);
+      updatedArray = state.inputs[action.inputId].value;
+      updatedArray.splice(-1, 1);
+      const arrIsValid = validate(updatedArray, action.validators);
       const updatedForm = {
         ...state,
         inputs: {
           ...state.inputs,
           [action.inputId]: {
-            value: updatedArr,
+            value: updatedArray,
             isValid: arrIsValid,
           },
         },
@@ -113,5 +138,13 @@ export const useForm = (initialInputs, initialFormIsValid) => {
     });
   }, []);
 
-  return [formState, inputHandler, removeArrItem, setFormData];
+  const addArrItem = useCallback((id, inputCoord) => {
+    dispatch({
+      type: "ADD_ARR_ITEM",
+      inputId: id,
+      inputCoord: inputCoord,
+    });
+  }, []);
+
+  return [formState, inputHandler, removeArrItem, addArrItem, setFormData];
 };

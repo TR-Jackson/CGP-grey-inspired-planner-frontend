@@ -19,7 +19,13 @@ const NewItem = (props) => {
     VALIDATOR_MINLENGTH(5),
   ]);
   const [stepsCount, setStepsCount] = useState([0]);
-  const [formState, inputHandler, removeArrItem, setFormData] = useForm({
+  const [
+    formState,
+    inputHandler,
+    removeArrItem,
+    addArrItem,
+    setFormData,
+  ] = useForm({
     title: {
       value: "",
       isValid: false,
@@ -118,12 +124,13 @@ const NewItem = (props) => {
   const toggleStepCountHandler = (action, validators) => {
     switch (action) {
       case "ADD":
-        const newCount = new Array(stepsCount.length + 1)
-          .fill(undefined)
-          .map((value, index) => {
-            return index;
-          });
-        setStepsCount(newCount);
+        // const newCount = new Array(stepsCount.length + 1)
+        //   .fill(undefined)
+        //   .map((value, index) => {
+        //     return index;
+        //   });
+        // setStepsCount(newCount);
+        addArrItem("steps", [0]);
         break;
       case "REMOVE":
         if (stepsCount.length > 1) {
