@@ -179,6 +179,7 @@ const NewItem = (props) => {
           </>
         );
       })} */}
+      {console.log(formState)}
       <NestedInputs
         formState={formState.inputs.steps.value}
         id="steps"
@@ -186,6 +187,7 @@ const NewItem = (props) => {
         type="text"
         onInput={inputHandler}
         errorText={"Enter a valid step (min. 5 characters)"}
+        validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
       />
       <div className="add-remove-buttons">
         <TextButton

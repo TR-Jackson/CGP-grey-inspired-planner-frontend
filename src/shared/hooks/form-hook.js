@@ -24,15 +24,17 @@ const formReducer = (state, action) => {
       // }
       let updatedArray;
       if (action.inputCoord) {
-        updatedArray = [...state.inputs[action.inputId].value];
-        let toEval = "updatedArray";
+        updatedArray = JSON.parse(
+          JSON.stringify(state.inputs[action.inputId].value)
+        );
+        console.log("updatedArray: ", updatedArray);
+        let arrayRef = "updatedArray";
         action.inputCoord.forEach((i) => {
-          toEval.concat("[");
-          toEval.concat(i);
-          toEval.concat("]");
+          arrayRef = arrayRef.concat("[", i, "][0]");
         });
 
-        console.log(toEval);
+        // eslint-disable-next-line
+        eval(arrayRef.concat(" = action.value"));
       }
 
       return {

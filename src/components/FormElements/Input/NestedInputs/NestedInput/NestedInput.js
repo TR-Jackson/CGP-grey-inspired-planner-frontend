@@ -20,9 +20,10 @@ const NestedInput = (props) => {
           onInput={props.onInput}
           clear={props.clear}
           errorText={props.errorText}
+          validators={props.validators}
         />
       </li>
-      {formState && (
+      {!!formState && (
         <NestedInputs
           formState={formState}
           coord={props.inputCoord}
@@ -32,6 +33,7 @@ const NestedInput = (props) => {
           onInput={props.onInput}
           clear={props.clear}
           errorText={props.errorText}
+          validators={props.validators}
         />
       )}
     </ul>

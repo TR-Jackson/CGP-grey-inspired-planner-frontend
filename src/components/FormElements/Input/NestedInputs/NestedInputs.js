@@ -9,6 +9,7 @@ const NestedInputs = (props) => {
   return (
     <div>
       <ul>
+        {console.log(props.formState)}
         {props.formState.map((input, i) => (
           <li key={i}>
             <NestedInput
@@ -20,6 +21,7 @@ const NestedInputs = (props) => {
               onInput={props.onInput}
               clear={props.clear}
               errorText={props.errorText}
+              validators={props.validators}
             />
           </li>
         ))}
