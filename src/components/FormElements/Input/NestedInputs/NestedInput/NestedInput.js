@@ -1,5 +1,6 @@
 import React from "react";
 
+import TextButton from "../../../../UI/TextButton/TextButton";
 import Input from "../../Input";
 import NestedInputs from "../NestedInputs";
 import "./NestedInput.css";
@@ -22,11 +23,23 @@ const NestedInput = (props) => {
           errorText={props.errorText}
           validators={props.validators}
         />
+        <TextButton
+          onClick={() => props.editInput("PUSH", null, props.inputCoord)}
+        >
+          <strong>+</strong>
+        </TextButton>
+        <TextButton
+          onClick={() =>
+            props.editInput("POP", props.validators, props.inputCoord)
+          }
+        >
+          <strong>-</strong>
+        </TextButton>
       </li>
       {!!formState && (
         <NestedInputs
           formState={formState}
-          coord={props.inputCoord}
+          inputCoord={props.inputCoord}
           id={props.id}
           type={props.type}
           placeholder={props.placeholder}
@@ -34,6 +47,7 @@ const NestedInput = (props) => {
           clear={props.clear}
           errorText={props.errorText}
           validators={props.validators}
+          editInput={props.editInput}
         />
       )}
     </ul>

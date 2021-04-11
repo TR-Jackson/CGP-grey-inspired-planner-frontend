@@ -10,7 +10,7 @@ const NestedInputs = (props) => {
         {props.formState.map((input, i) => (
           <li key={i}>
             <NestedInput
-              inputCoord={props.inputCoord ? props.inputCoord.push(i) : [i]}
+              inputCoord={props.inputCoord ? [...props.inputCoord, i] : [i]}
               formState={input}
               id={props.id}
               type={props.type}
@@ -19,6 +19,7 @@ const NestedInputs = (props) => {
               clear={props.clear}
               errorText={props.errorText}
               validators={props.validators}
+              editInput={props.editInput}
             />
           </li>
         ))}

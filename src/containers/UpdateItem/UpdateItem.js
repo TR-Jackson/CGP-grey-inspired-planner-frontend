@@ -22,8 +22,8 @@ const NewItem = (props) => {
   const [
     formState,
     inputHandler,
-    removeArrItem,
-    addArrItem,
+    popArrItem,
+    pushArrItem,
     setFormData,
   ] = useForm({
     title: {
@@ -31,7 +31,7 @@ const NewItem = (props) => {
       isValid: false,
     },
     steps: {
-      value: [["", null]],
+      value: [["", []]],
       isValid: false,
     },
 
@@ -98,7 +98,7 @@ const NewItem = (props) => {
               isValid: false,
             },
             steps: {
-              value: [["", null]],
+              value: [["", []]],
               isValid: false,
             },
             due: {
@@ -121,13 +121,12 @@ const NewItem = (props) => {
   }, []);
 
   const editInputs = (action, validators, coord) => {
-    console.log("coord: ", coord);
     switch (action) {
-      case "ADD":
-        addArrItem("steps");
+      case "PUSH":
+        pushArrItem("steps", coord);
         break;
-      case "REMOVE":
-        removeArrItem("steps", validators, coord);
+      case "POP":
+        popArrItem("steps", validators, coord);
         break;
       default:
         break;
@@ -152,27 +151,30 @@ const NewItem = (props) => {
       <p>
         <strong>Steps:</strong>
       </p>
-      <NestedInputs
-        formState={formState.inputs.steps.value}
-        id="steps"
-        element="textarea"
-        type="text"
-        onInput={inputHandler}
-        errorText={"Enter a valid step (min. 5 characters)"}
-        validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
-        editInput={editInputs}
-      />
+      <div className="nested-inputs-form">
+        <NestedInputs
+          formState={formState.inputs.steps.value}
+          id="steps"
+          element="textarea"
+          type="text"
+          onInput={inputHandler}
+          errorText={"Enter a valid step (min. 5 characters)"}
+          validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
+          editInput={editInputs}
+        />
+      </div>
       <div className="add-remove-buttons">
-        <TextButton onClick={() => editInputs("ADD")} tip="Add a step">
+        <TextButton
+          onClick={() => editInputs("PUSH", null, [])}
+          tip="Add a step"
+        >
           <strong>+</strong>
         </TextButton>
         <TextButton
           disabled={formState.inputs.steps.value.length === 0}
           onClick={() =>
             formState.inputs.steps.value.length !== 0 &&
-            editInputs("REMOVE", stepValidators, [
-              formState.inputs.steps.value.length - 1,
-            ])
+            editInputs("POP", stepValidators, [])
           }
           tip="Remove a step"
         >

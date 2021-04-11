@@ -38,12 +38,12 @@ const List = (props) => {
             [
               "step1",
               [
-                ["sub1step1", [["sub1sub1step1", null]]],
-                ["sub1step2", [["sub1sub2step1", null]]],
+                ["sub1step1", [["sub1sub1step1", []]]],
+                ["sub1step2", [["sub1sub2step1", []]]],
               ],
             ],
           ],
-          [["step2", null]],
+          [["step2", []]],
         ],
         due: [2021, 3, 25],
       },

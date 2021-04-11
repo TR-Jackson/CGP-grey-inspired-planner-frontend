@@ -18,18 +18,27 @@ const checkFormValidity = (state, action) => {
 const formReducer = (state, action) => {
   let updatedArray;
   let arrayRef = "updatedArray";
+  let inputCoord = [];
+  console.log("================");
+  console.log("inputCoord: ", action.inputCoord);
+  console.log(action.type);
   switch (action.type) {
     case "INPUT_CHANGE":
       if (action.inputCoord) {
         updatedArray = JSON.parse(
           JSON.stringify(state.inputs[action.inputId].value)
         );
-        action.inputCoord.forEach((i) => {
-          arrayRef = arrayRef.concat("[", i, "][0]");
+        action.inputCoord.forEach((coord, i) => {
+          if (i !== action.inputCoord.length - 1) {
+            arrayRef = arrayRef.concat("[", coord, "][1]");
+          } else {
+            arrayRef = arrayRef.concat("[", coord, "][0]");
+          }
         });
 
         // eslint-disable-next-line
-        eval(arrayRef.concat(" = action.value"));
+        eval(`${arrayRef} = action.value`);
+        console.log("updatedArray: ", updatedArray);
       }
 
       return {
@@ -53,18 +62,22 @@ const formReducer = (state, action) => {
         inputs: action.inputs,
         isValid: action.formIsValid,
       };
-    case "ADD_ARR_ITEM":
+    case "PUSH_ARR":
       updatedArray = JSON.parse(
         JSON.stringify(state.inputs[action.inputId].value)
       );
 
-      action.inputCoord &&
-        action.inputCoord.forEach((i) => {
-          arrayRef = arrayRef.concat("[", i, "]");
+      inputCoord = [...action.inputCoord];
+      // inputCoord.pop();
+
+      inputCoord &&
+        inputCoord.forEach((i) => {
+          arrayRef = arrayRef.concat("[", i, "][1]");
         });
 
+      console.log(`${arrayRef}.push(["", []])`);
       // eslint-disable-next-line
-      eval(arrayRef.concat('.push(["", null])'));
+      eval(`${arrayRef}.push(["", []])`);
       return {
         ...state,
         inputs: {
@@ -76,19 +89,21 @@ const formReducer = (state, action) => {
         },
       };
 
-    case "DELETE_ARR_ITEM":
+    case "POP_ARR":
       updatedArray = JSON.parse(
         JSON.stringify(state.inputs[action.inputId].value)
       );
 
-      const coord = [...action.inputCoord];
-      const index = coord.pop();
-      coord.forEach((i) => {
-        arrayRef = arrayRef.concat("[", i, "]");
+      inputCoord = [...action.inputCoord];
+
+      inputCoord.forEach((i) => {
+        arrayRef = arrayRef.concat("[", i, "][1]");
       });
 
+      console.log("updatedArray: ", updatedArray);
       // eslint-disable-next-line
-      eval(arrayRef.concat(`.splice(${index})`));
+      eval(`${arrayRef}.pop()`);
+      console.log("updatedArray: ", updatedArray);
 
       const arrIsValid = validate(
         updatedArray,
@@ -96,6 +111,7 @@ const formReducer = (state, action) => {
         "FLAT",
         null
       );
+
       const updatedForm = {
         ...state,
         inputs: {
@@ -106,7 +122,6 @@ const formReducer = (state, action) => {
           },
         },
       };
-      console.log("updatedArray: ", updatedArray);
       action.isValid = arrIsValid;
       updatedForm.isValid = checkFormValidity(updatedForm, action);
       return updatedForm;
@@ -139,22 +154,22 @@ export const useForm = (initialInputs, initialFormIsValid) => {
     });
   }, []);
 
-  const removeArrItem = useCallback((id, validators, inputCoord) => {
+  const popArr = useCallback((id, validators, inputCoord) => {
     dispatch({
-      type: "DELETE_ARR_ITEM",
+      type: "POP_ARR",
       inputId: id,
       validators: validators,
       inputCoord: inputCoord,
     });
   }, []);
 
-  const addArrItem = useCallback((id, inputCoord) => {
+  const pushArr = useCallback((id, inputCoord) => {
     dispatch({
-      type: "ADD_ARR_ITEM",
+      type: "PUSH_ARR",
       inputId: id,
       inputCoord: inputCoord,
     });
   }, []);
 
-  return [formState, inputHandler, removeArrItem, addArrItem, setFormData];
+  return [formState, inputHandler, popArr, pushArr, setFormData];
 };
