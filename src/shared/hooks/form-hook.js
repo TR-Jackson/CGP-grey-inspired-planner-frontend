@@ -87,6 +87,7 @@ const formReducer = (state, action) => {
             isValid: false,
           },
         },
+        isValid: false,
       };
 
     case "POP_ARR":

@@ -40,31 +40,28 @@ export const validate = (value, validators, action) => {
     default:
       break;
   }
-  if (Array.isArray(array)) {
+
+  if (Array.isArray(value)) {
     for (const item of array) {
-      if (typeof item === "string") {
-        for (const validator of validators) {
-          if (validator.type === VALIDATOR_TYPE_REQUIRE) {
-            isValid = isValid && item.trim().length > 0;
-          }
-          if (validator.type === VALIDATOR_TYPE_MINLENGTH) {
-            isValid = isValid && item.trim().length >= validator.val;
-          }
-          if (validator.type === VALIDATOR_TYPE_MAXLENGTH) {
-            isValid = isValid && item.trim().length <= validator.val;
-          }
-          if (validator.type === VALIDATOR_TYPE_MIN) {
-            isValid = isValid && +item >= validator.val;
-          }
-          if (validator.type === VALIDATOR_TYPE_MAX) {
-            isValid = isValid && +item <= validator.val;
-          }
-          if (validator.type === VALIDATOR_TYPE_EMAIL) {
-            isValid = isValid && /^\S+@\S+\.\S+$/.test(item);
-          }
+      for (const validator of validators) {
+        if (validator.type === VALIDATOR_TYPE_REQUIRE) {
+          isValid = isValid && item.trim().length > 0;
         }
-      } else {
-        isValid = false;
+        if (validator.type === VALIDATOR_TYPE_MINLENGTH) {
+          isValid = isValid && item.trim().length >= validator.val;
+        }
+        if (validator.type === VALIDATOR_TYPE_MAXLENGTH) {
+          isValid = isValid && item.trim().length <= validator.val;
+        }
+        if (validator.type === VALIDATOR_TYPE_MIN) {
+          isValid = isValid && +item >= validator.val;
+        }
+        if (validator.type === VALIDATOR_TYPE_MAX) {
+          isValid = isValid && +item <= validator.val;
+        }
+        if (validator.type === VALIDATOR_TYPE_EMAIL) {
+          isValid = isValid && /^\S+@\S+\.\S+$/.test(item);
+        }
       }
     }
   } else if (typeof value === "string") {
@@ -90,6 +87,5 @@ export const validate = (value, validators, action) => {
     }
   }
 
-  console.log("is valid: ", isValid);
   return isValid;
 };
