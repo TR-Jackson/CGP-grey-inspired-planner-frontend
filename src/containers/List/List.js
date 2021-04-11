@@ -36,10 +36,10 @@ const List = (props) => {
         steps: [
           [
             [
-              "step1000000000000000000000000",
+              "step1",
               [
-                ["step1", [["step1", null]]],
-                ["step1", [["step1", null]]],
+                ["sub1step1", [["sub1sub1step1", null]]],
+                ["sub1step2", [["sub1sub2step1", null]]],
               ],
             ],
           ],
