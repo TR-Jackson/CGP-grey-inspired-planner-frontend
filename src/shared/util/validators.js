@@ -23,24 +23,25 @@ export const VALIDATOR_EMAIL = () => ({ type: VALIDATOR_TYPE_EMAIL });
 export const validate = (value, validators, action) => {
   let isValid = true;
   let array = [...value];
-  console.log("validating: ", value);
+  !Array.isArray(value) && console.log("validating: ", value);
   console.log("validators: ", validators);
   action && console.log(action);
 
   switch (action) {
     case "FLAT":
-      let prev_length = 1;
+      let prev_length = array.length;
       let curr_length = array.length;
-      while (curr_length > prev_length) {
+      do {
         array = array.flat();
         prev_length = curr_length;
         curr_length = array.length;
-      }
+      } while (curr_length > prev_length);
       break;
     default:
       break;
   }
 
+  Array.isArray(value) && console.log("validating: ", array);
   if (Array.isArray(value)) {
     for (const item of array) {
       for (const validator of validators) {

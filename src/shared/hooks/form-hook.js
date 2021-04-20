@@ -101,7 +101,6 @@ const formReducer = (state, action) => {
         arrayRef = arrayRef.concat("[", i, "][1]");
       });
 
-      console.log("updatedArray: ", updatedArray);
       // eslint-disable-next-line
       eval(`${arrayRef}.pop()`);
       console.log("updatedArray: ", updatedArray);

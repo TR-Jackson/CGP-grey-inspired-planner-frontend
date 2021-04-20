@@ -24,13 +24,18 @@ const NestedInput = (props) => {
           validators={props.validators}
         />
         <TextButton
+          tip="Add a substep"
           onClick={() => props.editInput("PUSH", null, props.inputCoord)}
         >
           <strong>+</strong>
         </TextButton>
         <TextButton
-          onClick={() =>
-            props.editInput("POP", props.validators, props.inputCoord)
+          tip="Remove a substep"
+          disabled={formState.length === 0}
+          onClick={
+            formState.length !== 0
+              ? () => props.editInput("POP", props.validators, props.inputCoord)
+              : () => {}
           }
         >
           <strong>-</strong>

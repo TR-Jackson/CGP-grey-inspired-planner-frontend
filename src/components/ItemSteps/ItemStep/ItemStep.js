@@ -11,7 +11,7 @@ const ItemStep = (props) => {
     <div className="item-step">
       <div className="main">
         <li>{step}</li>
-        {subSteps && (
+        {subSteps.length !== 0 && (
           <TextButton
             tip={isExpanded ? "Show Less" : "Show More"}
             onClick={() => setIsExpanded(!isExpanded)}
@@ -25,7 +25,7 @@ const ItemStep = (props) => {
           </TextButton>
         )}
       </div>
-      {subSteps && isExpanded && (
+      {subSteps.length !== 0 && isExpanded && (
         <li>
           <ItemSteps steps={subSteps} />
         </li>
