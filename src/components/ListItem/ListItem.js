@@ -2,14 +2,17 @@ import React from "react";
 
 import ItemSteps from "../ItemSteps/ItemSteps";
 import TextButton from "../UI/TextButton/TextButton";
+import ToggleArrow from "../UI/ToggleArrow/ToggleArrow";
 
 const listItem = (props) => {
   return (
-    <div className="bg-indigo-300 w-5/6 p-2 my-6 flex m-auto shadow-md rounded-md mb-0 hover:bg-indigo-200">
+    <div
+      className={`bg-indigo-300 w-5/6 p-2 my-6 flex m-auto shadow-md rounded-md mb-0 hover:bg-indigo-200 h-auto`}
+    >
       <div className="pt-0.5">
-        <TextButton disabled={false} onClick={props.onDelete} tip="Delete Item">
+        <TextButton onClick={props.onDelete} tip="Delete Item">
           <svg
-            className="m-0 hover:fill-current h-6 "
+            className="m-0 h-6 hover:fill-current hover:text-gray-100"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -23,9 +26,9 @@ const listItem = (props) => {
             />
           </svg>
         </TextButton>
-        <TextButton disabled={false} onClick={props.onEdit} tip="Edit Item">
+        <TextButton onClick={props.onEdit} tip="Edit Item">
           <svg
-            className="m-0 hover:fill-current h-6"
+            className="m-0 h-6 hover:fill-current hover:text-gray-100"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -44,21 +47,19 @@ const listItem = (props) => {
         <h1 className="font-semibold text-lg">{props.title}</h1>
         {props.expanded &&
           props.steps.map((step) => {
-            return (
-              <div className="steps">
-                <ItemSteps steps={step} key={props.steps.indexOf(step)} />
-              </div>
-            );
+            return <ItemSteps steps={step} key={props.steps.indexOf(step)} />;
           })}
         <p className="font-semibold text-lg">
           Due: {props.day}/{props.month}/{props.year}
         </p>
-        {/* <div
-        className={`arrow-right ${
-          props.expanded ? "toggle-down" : "toggle-up"
-        }`}
-        onClick={props.onToggle}
-      ></div> */}
+      </div>
+      <div className={"flex-grow"}>
+        <ToggleArrow
+          expanded={props.expanded}
+          height={6}
+          onToggle={props.onToggle}
+          mt={0}
+        />
       </div>
     </div>
   );

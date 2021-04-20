@@ -6,7 +6,9 @@ const TextButton = (props) => {
   return (
     <div
       onClick={props.onClick}
-      className={`tooltip ${props.disabled ? " disabled" : " enabled"}`}
+      className={`tooltip ${props.disabled ? " disabled" : " enabled"} ${
+        props.styling
+      }`}
     >
       {props.children}
       <span className="tooltiptext">{props.tip}</span>
