@@ -7,7 +7,6 @@ import UpdateItem from "../UpdateItem/UpdateItem";
 import ListItem from "../../components/ListItem/ListItem";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Button from "../../components/FormElements/Button/Button";
-import "./List.css";
 
 const List = (props) => {
   const [isDeleting, setIsDeleting] = useState([false, null]); // show modal, itemId
@@ -96,8 +95,8 @@ const List = (props) => {
 
   if (!isLoading) {
     content = (
-      <div className="list">
-        <ul>
+      <div className="h-screen bg-gray-100">
+        <div className="bg-gray-100 shadow-2xl w-4/5 m-auto h-screen flex flex-col space-y-6 py-10">
           {list.length > 0 ? (
             list.map((item) => {
               return (
@@ -116,38 +115,39 @@ const List = (props) => {
               );
             })
           ) : (
-            <p className="centred">
+            <p className="text-center">
               <strong>No Plans Yet!</strong>
             </p>
           )}
-        </ul>
-        <div className="centred">
-          <Button onClick={() => setIsEditingItem([true, null])}>
+          <div
+            className="rounded-md shadow-md font-semibold m-auto text-center p-2 bg-gradient-to-r w-1/2 from-indigo-400 to-indigo-300 hover:from-indigo-300 hover:to-indigo-200 cursor-pointer"
+            onClick={() => setIsEditingItem([true, null])}
+          >
             ADD ITEM
-          </Button>
+          </div>
+          <Modal
+            scroll
+            show={isEditingItem[0]}
+            modalClosed={() => setIsEditingItem([false, null])}
+          >
+            <UpdateItem
+              setIsLoading={setIsLoading}
+              onPostHandler={onPostHandler}
+              itemData={
+                isEditingItem[0] &&
+                list.find((item) => item._id === isEditingItem[1])
+              }
+              closeModal={() => setIsEditingItem([false, null])}
+              modalIsOpen={isEditingItem[0]}
+            />
+          </Modal>
+          <Modal
+            show={isDeleting[0]}
+            modalClosed={() => setIsDeleting([false, null])}
+          >
+            <DeleteItem onClick={onDeleteHandler} />
+          </Modal>
         </div>
-        <Modal
-          scroll
-          show={isEditingItem[0]}
-          modalClosed={() => setIsEditingItem([false, null])}
-        >
-          <UpdateItem
-            setIsLoading={setIsLoading}
-            onPostHandler={onPostHandler}
-            itemData={
-              isEditingItem[0] &&
-              list.find((item) => item._id === isEditingItem[1])
-            }
-            closeModal={() => setIsEditingItem([false, null])}
-            modalIsOpen={isEditingItem[0]}
-          />
-        </Modal>
-        <Modal
-          show={isDeleting[0]}
-          modalClosed={() => setIsDeleting([false, null])}
-        >
-          <DeleteItem onClick={onDeleteHandler} />
-        </Modal>
       </div>
     );
   }
