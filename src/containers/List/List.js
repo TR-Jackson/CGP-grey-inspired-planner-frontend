@@ -6,7 +6,6 @@ import Modal from "../../components/UI/Modal/Modal";
 import UpdateItem from "../UpdateItem/UpdateItem";
 import ListItem from "../../components/ListItem/ListItem";
 import Spinner from "../../components/UI/Spinner/Spinner";
-import Button from "../../components/FormElements/Button/Button";
 
 const List = (props) => {
   const [isDeleting, setIsDeleting] = useState([false, null]); // show modal, itemId

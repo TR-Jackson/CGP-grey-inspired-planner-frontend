@@ -1,19 +1,16 @@
 import React from "react";
 
 import ItemSteps from "../ItemSteps/ItemSteps";
-import DeleteIcon from "../../assets/delete-icon.png";
-import EditIcon from "../../assets/edit-icon.png";
 import TextButton from "../UI/TextButton/TextButton";
 
 const listItem = (props) => {
   return (
     <div className="bg-indigo-300 w-5/6 p-2 my-6 flex m-auto shadow-md rounded-md mb-0 hover:bg-indigo-200">
-      <div>
+      <div className="pt-0.5">
         <TextButton disabled={false} onClick={props.onDelete} tip="Delete Item">
           <svg
-            className="m-0 hover:fill-current"
+            className="m-0 hover:fill-current h-6 "
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-auto"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -28,9 +25,8 @@ const listItem = (props) => {
         </TextButton>
         <TextButton disabled={false} onClick={props.onEdit} tip="Edit Item">
           <svg
-            className="m-0 hover:fill-current"
+            className="m-0 hover:fill-current h-6"
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-auto"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -44,8 +40,8 @@ const listItem = (props) => {
           </svg>
         </TextButton>
       </div>
-      <div className="flex flex-col space-y-0">
-        <h1>{props.title}</h1>
+      <div className="flex flex-col space-y-0.5">
+        <h1 className="font-semibold text-lg">{props.title}</h1>
         {props.expanded &&
           props.steps.map((step) => {
             return (
@@ -54,7 +50,7 @@ const listItem = (props) => {
               </div>
             );
           })}
-        <p className="due">
+        <p className="font-semibold text-lg">
           Due: {props.day}/{props.month}/{props.year}
         </p>
         {/* <div
