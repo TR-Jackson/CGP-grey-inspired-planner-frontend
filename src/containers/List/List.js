@@ -94,7 +94,7 @@ const List = (props) => {
 
   if (!isLoading) {
     content = (
-      <div className="h-screen bg-gray-100">
+      <div className="h-screen hexagons">
         <div className="bg-gray-100 shadow-2xl w-4/5 m-auto h-screen flex flex-col space-y-6 py-10">
           {list.length > 0 ? (
             list.map((item) => {

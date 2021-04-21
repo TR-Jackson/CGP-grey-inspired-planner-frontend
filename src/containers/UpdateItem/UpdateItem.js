@@ -195,14 +195,16 @@ const NewItem = (props) => {
         }
         initialValid={itemData && true}
       />
-      <Button
-        onClick={itemSubmitHandler}
-        type="submit"
-        disabled={!formState.isValid}
-        modalClosed={props.modalClosed}
-      >
-        {`${itemData ? "UPDATE" : "ADD"} ITEM`}
-      </Button>
+      <div className="flex pt-2 justify-center">
+        <Button
+          onClick={itemSubmitHandler}
+          type="submit"
+          disabled={!formState.isValid}
+          modalClosed={props.modalClosed}
+        >
+          {`${itemData ? "UPDATE" : "ADD"} ITEM`}
+        </Button>
+      </div>
     </form>
   );
 };

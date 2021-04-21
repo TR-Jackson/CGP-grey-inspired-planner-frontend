@@ -1,14 +1,13 @@
 import React from "react";
 
 import Button from "../FormElements/Button/Button";
-import "./DeleteItem.css";
 
 const DeleteItem = (props) => {
   return (
-    <div className="delete-item">
-      <p>Are you sure you want to delete this item?</p>
+    <div className="flex flex-col text-center">
+      <p className="mb-6 mt-2">Are you sure you want to delete this item?</p>
       <Button danger onClick={props.onClick}>
-        Delete Item
+        DELETE ITEM
       </Button>
     </div>
   );
