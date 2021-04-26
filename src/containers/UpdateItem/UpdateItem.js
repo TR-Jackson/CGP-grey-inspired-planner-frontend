@@ -204,6 +204,7 @@ const NewItem = (props) => {
       />
       <div className="flex pt-2 justify-center">
         <Button
+          width="1/3"
           onClick={itemSubmitHandler}
           type="submit"
           disabled={!formState.isValid}

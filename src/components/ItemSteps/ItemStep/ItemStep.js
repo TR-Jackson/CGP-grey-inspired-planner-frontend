@@ -9,7 +9,7 @@ const ItemStep = (props) => {
   return (
     <>
       <div className="flex">
-        <p className={`pl-${props.level * 4} h-auto`}>{step}</p>
+        <p className={`pl-${props.level * 4} h-auto text-white`}>{step}</p>
         {subSteps.length !== 0 && (
           <div className={"flex-grow h-1"}>
             <ToggleArrow

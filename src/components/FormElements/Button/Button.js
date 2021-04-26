@@ -29,13 +29,15 @@ const Button = (props) => {
   }
   return (
     <button
-      className={`w-4/5 rounded-md shadow-md font-semibold m-auto text-center p-2 cursor-pointer
+      className={`${props.className} w-${
+        props.width
+      } rounded-md shadow-md font-semibold m-auto text-center p-2 cursor-pointer
 ${
   props.disabled
     ? "cursor-not-allowed bg-gray-200 text-gray-600"
     : props.danger
-    ? "bg-red-700 hover:bg-red-500"
-    : "bg-gradient-to-r w-1/2 from-indigo-400 to-indigo-300 hover:from-indigo-300 hover:to-indigo-200"
+    ? "bg-red-700 hover:bg-red-500 text-gray-200"
+    : "bg-gradient-to-r w-1/2 from-blue-500 to-blue-400 hover:from-blue-300 hover:to-blue-200"
 }`}
       type={props.type}
       onClick={props.onClick}

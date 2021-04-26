@@ -7,12 +7,12 @@ import ToggleArrow from "../UI/ToggleArrow/ToggleArrow";
 const listItem = (props) => {
   return (
     <div
-      className={`bg-indigo-300 w-5/6 p-2 my-6 flex m-auto shadow-md rounded-md mb-0 hover:bg-indigo-200 h-auto`}
+      className={`bg-blue-400 w-5/6 p-2 my-6 flex m-auto shadow-md rounded-md mb-0 hover:bg-blue-300 h-auto`}
     >
       <div className="pt-0.5">
         <TextButton onClick={props.onDelete} tip="Delete Item">
           <svg
-            className="m-0 h-6 hover:fill-current hover:text-gray-100"
+            className="m-0 h-6 transition duration-300 ease-in-out text-white hover:fill-white transform hover:-translate-y-1 hover:scale-110"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -28,7 +28,7 @@ const listItem = (props) => {
         </TextButton>
         <TextButton onClick={props.onEdit} tip="Edit Item">
           <svg
-            className="m-0 h-6 hover:fill-current hover:text-gray-100"
+            className="m-0 h-6 transition duration-300 ease-in-out text-white hover:fill-white transform hover:-translate-y-1 hover:scale-110"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -44,9 +44,9 @@ const listItem = (props) => {
         </TextButton>
       </div>
       <div className="flex flex-col space-y-0.5">
-        <h1 className="font-semibold text-lg">{props.title}</h1>
+        <h1 className="font-semibold text-lg text-gray-50">{props.title}</h1>
         {props.expanded && <ItemSteps steps={props.steps} />}
-        <p className="font-semibold text-lg">
+        <p className="font-semibold text-lg text-white">
           Due: {props.day}/{props.month}/{props.year}
         </p>
       </div>

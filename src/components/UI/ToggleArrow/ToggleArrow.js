@@ -11,9 +11,9 @@ const ToggleArrow = (props) => {
       tip={props.expanded ? "Show less" : "Show more"}
     >
       <svg
-        className={`m-0 w-auto h-${
+        className={`m-0 w-auto text-white h-${
           props.height
-        } hover:fill-current hover:text-gray-100 transiton delay-0 duration-100 transform ${
+        } hover:fill-current transiton delay-0 duration-100 transform ${
           props.expanded ? "rotate-90" : "rotate-0"
         }`}
         onClick={props.onToggle}

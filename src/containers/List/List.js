@@ -6,6 +6,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import UpdateItem from "../UpdateItem/UpdateItem";
 import ListItem from "../../components/ListItem/ListItem";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import Button from "../../components/FormElements/Button/Button";
 
 const List = (props) => {
   const [isDeleting, setIsDeleting] = useState([false, null]); // show modal, itemId
@@ -110,12 +111,13 @@ const List = (props) => {
               <strong>No Plans Yet!</strong>
             </p>
           )}
-          <div
-            className="rounded-md shadow-md font-semibold m-auto text-center p-2 bg-gradient-to-r w-1/2 from-indigo-400 to-indigo-300 hover:from-indigo-300 hover:to-indigo-200 cursor-pointer"
+          <Button
+            className="text-white"
+            width={10}
             onClick={() => setIsEditingItem([true, null])}
           >
             ADD ITEM
-          </div>
+          </Button>
           <Modal
             scroll
             show={isEditingItem[0]}
