@@ -31,7 +31,7 @@ const Button = (props) => {
   }
   return (
     <button
-      className={`w-2/3 rounded-md shadow-md font-semibold m-auto text-center p-2 cursor-pointer
+      className={`w-10 rounded-md shadow-md font-semibold m-auto text-center p-2 cursor-pointer
       ${
         props.danger
           ? "bg-red-700 hover:bg-red-500"

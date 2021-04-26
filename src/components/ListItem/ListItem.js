@@ -45,10 +45,7 @@ const listItem = (props) => {
       </div>
       <div className="flex flex-col space-y-0.5">
         <h1 className="font-semibold text-lg">{props.title}</h1>
-        {props.expanded &&
-          props.steps.map((step) => {
-            return <ItemSteps steps={step} key={props.steps.indexOf(step)} />;
-          })}
+        {props.expanded && <ItemSteps steps={props.steps} />}
         <p className="font-semibold text-lg">
           Due: {props.day}/{props.month}/{props.year}
         </p>

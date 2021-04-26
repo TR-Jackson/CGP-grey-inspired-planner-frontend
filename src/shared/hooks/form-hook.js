@@ -19,9 +19,6 @@ const formReducer = (state, action) => {
   let updatedArray;
   let arrayRef = "updatedArray";
   let inputCoord = [];
-  console.log("================");
-  console.log("inputCoord: ", action.inputCoord);
-  console.log(action.type);
   switch (action.type) {
     case "INPUT_CHANGE":
       if (action.inputCoord) {
@@ -38,7 +35,6 @@ const formReducer = (state, action) => {
 
         // eslint-disable-next-line
         eval(`${arrayRef} = action.value`);
-        console.log("updatedArray: ", updatedArray);
       }
 
       return {
@@ -68,14 +64,12 @@ const formReducer = (state, action) => {
       );
 
       inputCoord = [...action.inputCoord];
-      // inputCoord.pop();
 
       inputCoord &&
         inputCoord.forEach((i) => {
           arrayRef = arrayRef.concat("[", i, "][1]");
         });
 
-      console.log(`${arrayRef}.push(["", []])`);
       // eslint-disable-next-line
       eval(`${arrayRef}.push(["", []])`);
       return {
@@ -103,7 +97,6 @@ const formReducer = (state, action) => {
 
       // eslint-disable-next-line
       eval(`${arrayRef}.pop()`);
-      console.log("updatedArray: ", updatedArray);
 
       const arrIsValid = validate(
         updatedArray,

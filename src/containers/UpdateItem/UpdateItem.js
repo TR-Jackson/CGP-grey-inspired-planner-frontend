@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "../../axios-planner";
 
+import AddRemoveButtons from "../../components/UI/AddRemoveButtons/AddRemoveButtons";
 import NestedInputs from "../../components/FormElements/Input/NestedInputs/NestedInputs";
 import Input from "../../components/FormElements/Input/Input";
 import Button from "../../components/FormElements/Button/Button";
@@ -9,8 +10,6 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
-import TextButton from "../../components/UI/TextButton/TextButton";
-import "./UpdateItem.css";
 
 const NewItem = (props) => {
   const [clearInputs, setClearInputs] = useState(false);
@@ -18,7 +17,6 @@ const NewItem = (props) => {
     VALIDATOR_REQUIRE(),
     VALIDATOR_MINLENGTH(5),
   ]);
-  // const [stepsCount, setStepsCount] = useState([0]);
   const [
     formState,
     inputHandler,
@@ -41,10 +39,6 @@ const NewItem = (props) => {
     },
   });
 
-  useEffect(() => {
-    console.log(formState);
-  }, [formState]);
-
   const { itemData, modalIsOpen } = props;
 
   useEffect(() => {
@@ -58,12 +52,6 @@ const NewItem = (props) => {
         }
       });
       setFormData(formData, true);
-      // const newCount = new Array(itemData.steps.length)
-      //   .fill(undefined)
-      //   .map((value, index) => {
-      //     return index;
-      //   });
-      // setStepsCount(newCount);
     }
   }, [itemData, setFormData]);
 
@@ -118,7 +106,22 @@ const NewItem = (props) => {
 
   const onClear = useCallback(() => {
     setClearInputs(false);
-  }, []);
+    setFormData({
+      title: {
+        value: "",
+        isValid: false,
+      },
+      steps: {
+        value: [["", []]],
+        isValid: false,
+      },
+
+      due: {
+        value: "",
+        isValid: false,
+      },
+    });
+  }, [setFormData]);
 
   const editInputs = (action, validators, coord) => {
     switch (action) {
@@ -134,13 +137,16 @@ const NewItem = (props) => {
   };
 
   return (
-    <form className="place-form" onSubmit={itemSubmitHandler}>
+    <form
+      className="flex flex-col jusitfy-center space-y-1 pt-2 overflow-hidden"
+      onSubmit={itemSubmitHandler}
+    >
+      <p className="font-semibold mb-0">Title:</p>
       <Input
         onClear={onClear}
         id="title"
         element="input"
         type="text"
-        label="Title"
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid title."
         onInput={inputHandler}
@@ -148,11 +154,22 @@ const NewItem = (props) => {
         initialValue={itemData && itemData.title}
         initialValid={itemData && true}
       />
-      <p>
-        <strong>Steps:</strong>
-      </p>
-      <div className="nested-inputs-form">
+      <div className="flex items-center pt-2">
+        <p className="font-semibold mr-4">Steps:</p>
+        <AddRemoveButtons
+          onClickAdd={() => editInputs("PUSH", null, [])}
+          addTip={"Add a step"}
+          onClickRemove={() =>
+            formState.inputs.steps.value.length !== 0 &&
+            editInputs("POP", stepValidators, [])
+          }
+          removeTip={"Remove a step"}
+        />
+      </div>
+      <div>
         <NestedInputs
+          clear={clearInputs}
+          onClear={onClear}
           formState={formState.inputs.steps.value}
           id="steps"
           element="textarea"
@@ -161,31 +178,14 @@ const NewItem = (props) => {
           errorText={"Enter a valid step (min. 5 characters)"}
           validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
           editInput={editInputs}
+          useInitValue={!!itemData}
         />
       </div>
-      <div className="add-remove-buttons">
-        <TextButton
-          onClick={() => editInputs("PUSH", null, [])}
-          tip="Add a step"
-        >
-          <strong>+</strong>
-        </TextButton>
-        <TextButton
-          disabled={formState.inputs.steps.value.length === 0}
-          onClick={() =>
-            formState.inputs.steps.value.length !== 0 &&
-            editInputs("POP", stepValidators, [])
-          }
-          tip="Remove a step"
-        >
-          <strong>-</strong>
-        </TextButton>
-      </div>
+      <p className="font-semibold mb-0">Complete by:</p>
       <Input
         onClear={onClear}
         id="due"
         element="date"
-        label="Complete by:"
         validators={[VALIDATOR_REQUIRE()]}
         onInput={inputHandler}
         clear={clearInputs}

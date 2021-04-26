@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 
 import { validate } from "../../../shared/util/validators";
@@ -20,23 +20,32 @@ const inputReducer = (state, action) => {
         ...state,
         isTouched: true,
       };
-    case "CLEAR":
-      return {
-        value: "",
-        isTouched: false,
-        isValid: false,
-      };
+    case "RESET":
+      return init(action.resetPayload);
     default:
       return state;
   }
 };
 
-const Input = (props) => {
-  const [inputState, dispatch] = useReducer(inputReducer, {
-    value: props.initialValue || "",
+const init = (initPayload) => {
+  return {
+    value: initPayload.value || "",
     isTouched: false,
-    isValid: props.initialValid || false,
-  });
+    isValid: initPayload.valid || false,
+  };
+};
+
+const Input = (props) => {
+  const [hasInit, setHasInit] = useState(false);
+  const [inputState, dispatch] = useReducer(
+    inputReducer,
+    {
+      value: props.initialValue || "",
+      isTouched: false,
+      isValid: props.initialValid || false,
+    },
+    init
+  );
 
   const {
     id,
@@ -54,26 +63,36 @@ const Input = (props) => {
     if (currValue !== value) {
       onInput(id, value, isValid, inputCoord);
     }
-  }, [id, value, isValid, onInput, inputCoord, currValue]);
+  }, [id, value, isValid, onInput, inputCoord, currValue, initialValue]);
 
   useEffect(() => {
     if (clear) {
       dispatch({
-        type: "CLEAR",
+        type: "RESET",
+        resetPayload: {
+          value: "",
+          isTouched: false,
+          isValid: false,
+        },
       });
       onClear();
+      setHasInit(false);
     }
   }, [clear, onClear]);
 
   useEffect(() => {
-    if (initialValue) {
+    if (!!initialValue && !hasInit) {
       dispatch({
-        type: "CHANGE",
-        val: initialValue,
-        initValid: initialValid,
+        type: "RESET",
+        resetPayload: {
+          value: initialValue,
+          isTouched: false,
+          isValid: initialValid,
+        },
       });
+      setHasInit(true);
     }
-  }, [initialValue, initialValid]);
+  }, [initialValue, initialValid, hasInit, setHasInit]);
 
   const changeHandler = (event) => {
     if (props.currValue !== event.target.value) {
@@ -102,6 +121,8 @@ const Input = (props) => {
   const element =
     props.element === "input" && props.type !== "date" ? (
       <input
+        className="w-auto"
+        size={45}
         coord={props.coord}
         id={props.id}
         type={props.type}
@@ -118,8 +139,9 @@ const Input = (props) => {
       />
     ) : (
       <textarea
+        className="w-max resize-none"
         id={props.id}
-        rows={props.rows || 3}
+        rows={props.rows || 2}
         onChange={changeHandler}
         value={inputState.value}
         onBlur={touchHandler}
@@ -128,14 +150,14 @@ const Input = (props) => {
 
   return (
     <div
-      className={`form-control 
+      className={`w-max
                 ${
                   !inputState.isValid &&
                   inputState.isTouched &&
                   "form-control--invalid"
                 }`}
     >
-      <label htmlFor={props.id}>{props.label}</label>
+      {props.label && <label htmlFor={props.id}>{props.label}</label>}
       {element}
       {!inputState.isValid && inputState.isTouched && <p>{props.errorText}</p>}
     </div>

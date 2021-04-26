@@ -32,16 +32,8 @@ const List = (props) => {
         title: "Steps Test",
         _id: "65abc728",
         steps: [
-          [
-            [
-              "step1",
-              [
-                ["sub1step1", [["sub1sub1step1", []]]],
-                ["sub1step2", [["sub1sub2step1", []]]],
-              ],
-            ],
-          ],
-          [["step2", []]],
+          ["step1", [["step1sub1", []]]],
+          ["step2", []],
         ],
         due: [2021, 3, 25],
       },
@@ -133,8 +125,9 @@ const List = (props) => {
               setIsLoading={setIsLoading}
               onPostHandler={onPostHandler}
               itemData={
-                isEditingItem[0] &&
-                list.find((item) => item._id === isEditingItem[1])
+                isEditingItem[0]
+                  ? list.find((item) => item._id === isEditingItem[1])
+                  : null
               }
               closeModal={() => setIsEditingItem([false, null])}
               modalIsOpen={isEditingItem[0]}
