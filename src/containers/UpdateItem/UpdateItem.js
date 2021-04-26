@@ -106,22 +106,29 @@ const NewItem = (props) => {
 
   const onClear = useCallback(() => {
     setClearInputs(false);
-    setFormData({
-      title: {
-        value: "",
-        isValid: false,
-      },
-      steps: {
-        value: [["", []]],
-        isValid: false,
-      },
+    setFormData(
+      {
+        title: {
+          value: "",
+          isValid: false,
+        },
+        steps: {
+          value: [["", []]],
+          isValid: false,
+        },
 
-      due: {
-        value: "",
-        isValid: false,
+        due: {
+          value: "",
+          isValid: false,
+        },
       },
-    });
+      false
+    );
   }, [setFormData]);
+
+  useEffect(() => {
+    console.log("formstate: ", formState);
+  }, [formState]);
 
   const editInputs = (action, validators, coord) => {
     switch (action) {
