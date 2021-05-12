@@ -31,7 +31,7 @@ const init = (initPayload) => {
   return {
     value: initPayload.value || "",
     isTouched: false,
-    isValid: initPayload.valid || false,
+    isValid: initPayload.isValid || false,
   };
 };
 
@@ -107,7 +107,7 @@ const Input = (props) => {
   const dateChangedHandler = (newDate) => {
     dispatch({
       type: "CHANGE",
-      val: newDate.getTime().toString(),
+      val: newDate.getTime(),
       validators: props.validators,
     });
   };
@@ -121,8 +121,8 @@ const Input = (props) => {
   const element =
     props.element === "input" && props.type !== "date" ? (
       <input
-        className="w-auto"
-        size={45}
+        className="w-auto rounded-md shadow-sm"
+        size={20}
         coord={props.coord}
         id={props.id}
         type={props.type}
@@ -133,13 +133,15 @@ const Input = (props) => {
       />
     ) : props.element === "date" ? (
       <DatePicker
-        onChange={dateChangedHandler}
+        className="rounded-md"
+        onChange={(date) => dateChangedHandler(date)}
         selected={inputState.value && new Date(parseInt(inputState.value))}
         popperPlacement="top-start"
+        dateFormat="dd/MM/yyyy"
       />
     ) : (
       <textarea
-        className="w-max resize-none"
+        className="w-max resize-none shadow-sm"
         id={props.id}
         rows={props.rows || 2}
         onChange={changeHandler}

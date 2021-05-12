@@ -47,7 +47,7 @@ const listItem = (props) => {
         <h1 className="font-semibold text-lg text-gray-50">{props.title}</h1>
         {props.expanded && <ItemSteps steps={props.steps} />}
         <p className="font-semibold text-lg text-white">
-          Due: {props.day}/{props.month}/{props.year}
+          Due: {props.day}/{props.month + 1}/{props.year}
         </p>
       </div>
       <div className={"flex-grow"}>

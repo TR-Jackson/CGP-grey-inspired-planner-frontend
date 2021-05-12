@@ -6,7 +6,7 @@ const AddRemoveButtons = (props) => (
   <div
     className={`flex ${
       props.stackY ? "flex-col py-5 h-10" : "px-5"
-    } justify-center items-center w-5 py-0.5 m-1 shadow-md rounded-sm bg-gray-200 `}
+    } justify-center items-center w-5 py-0.5 m-1 shadow-sm rounded-md bg-gray-200 `}
   >
     <TextButton onClick={props.onClickAdd} tip={props.addTip}>
       <svg

@@ -22,7 +22,10 @@ export const VALIDATOR_EMAIL = () => ({ type: VALIDATOR_TYPE_EMAIL });
 
 export const validate = (value, validators, action) => {
   let isValid = true;
-  let array = [...value];
+  let array;
+  if (Array.isArray(value)) {
+    array = [...value];
+  }
 
   switch (action) {
     case "FLAT":
@@ -61,7 +64,10 @@ export const validate = (value, validators, action) => {
         }
       }
     }
-  } else if (typeof value === "string") {
+  } else {
+    if (typeof value === "number") {
+      value = value.toString();
+    }
     for (const validator of validators) {
       if (validator.type === VALIDATOR_TYPE_REQUIRE) {
         isValid = isValid && value.trim().length > 0;

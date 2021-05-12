@@ -8,7 +8,7 @@ const NestedInput = (props) => {
   const [input, formState] = props.formState;
   return (
     <>
-      <div className="flex items-center justify-start">
+      <div className="flex items-center justify-start flex-shrink">
         <div className={`ml-${(props.inputCoord.length - 1) * 6} w-auto`}>
           <Input
             element="input"

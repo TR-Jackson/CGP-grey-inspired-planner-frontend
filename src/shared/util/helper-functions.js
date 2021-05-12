@@ -3,5 +3,6 @@ export const dateToArray = (timeInMilli) => {
     timeInMilli = parseInt(timeInMilli);
   }
   const date = new Date(timeInMilli);
-  return [date.getFullYear(), date.getMonth() + 1, date.getDay()];
+  console.log(date);
+  return [date.getDay(), date.getMonth(), date.getFullYear()];
 };

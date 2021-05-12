@@ -31,7 +31,9 @@ const Button = (props) => {
     <button
       className={`${props.className} w-${
         props.width
-      } rounded-md shadow-md font-semibold m-auto text-center p-2 cursor-pointer
+      } rounded-md shadow-md font-semibold ${
+        props.centered ? "m-auto" : null
+      } text-center p-2 cursor-pointer
 ${
   props.disabled
     ? "cursor-not-allowed bg-gray-200 text-gray-600"

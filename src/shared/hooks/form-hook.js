@@ -1,7 +1,6 @@
 import { useCallback, useReducer } from "react";
 
 import { validate } from "../util/validators";
-import { dateToArray } from "../util/helper-functions";
 
 const checkFormValidity = (state, action) => {
   let formIsValid = true;
@@ -42,12 +41,7 @@ const formReducer = (state, action) => {
         inputs: {
           ...state.inputs,
           [action.inputId]: {
-            value:
-              action.inputId === "due"
-                ? dateToArray(action.value)
-                : action.inputId === "steps"
-                ? updatedArray
-                : action.value,
+            value: action.inputId === "steps" ? updatedArray : action.value,
             isValid: action.isValid,
           },
         },

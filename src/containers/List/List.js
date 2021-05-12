@@ -13,32 +13,33 @@ const List = (props) => {
   const [list, setList] = useState([]);
   const [isEditingItem, setIsEditingItem] = useState([false, null]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isExpanded, setIsExpanded] = useState({});
+  const [isExpanded, setIsExpanded] = useState([]);
 
   useEffect(() => {
-    // axios
-    //   .get("/planner")
-    //   .then((result) => {
-    //     setList(result.data);
-    //     const initIsExpanded = {};
-    //     Object.keys(result.data).map((key) => (initIsExpanded[key] = false));
-    //     setIsExpanded(initIsExpanded);
-    //     setIsLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    setList([
-      {
-        title: "Steps Test",
-        _id: "65abc728",
-        steps: [
-          ["step1", [["step1sub1", []]]],
-          ["step2", []],
-        ],
-        due: [2021, 3, 25],
-      },
-    ]);
+    axios
+      .get("/planner")
+      .then((result) => {
+        console.log("fetched");
+        setList(result.data);
+        const initIsExpanded = {};
+        Object.keys(result.data).map((key) => (initIsExpanded[key] = false));
+        setIsExpanded(initIsExpanded);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // setList([
+    //   {
+    //     title: "Steps Test",
+    //     _id: "65abc728",
+    //     steps: [
+    //       ["step1", [["step1sub1", []]]],
+    //       ["step2", []],
+    //     ],
+    //     due: [2021, 3, 25],
+    //   },
+    // ]);
     setIsExpanded([false]);
     setIsLoading(false);
   }, []);
@@ -91,12 +92,13 @@ const List = (props) => {
         <div className="bg-gray-100 shadow-2xl w-4/5 m-auto h-screen flex flex-col space-y-6 py-10">
           {list.length > 0 ? (
             list.map((item) => {
+              const date = new Date(item.due);
               return (
                 <ListItem
                   key={item._id}
-                  day={item.due[2]}
-                  month={item.due[1]}
-                  year={item.due[0]}
+                  day={date.getDate()}
+                  month={date.getMonth()}
+                  year={date.getFullYear()}
                   steps={item.steps}
                   title={item.title}
                   onToggle={() => onToggleHandler(list.indexOf(item))}
@@ -107,12 +109,11 @@ const List = (props) => {
               );
             })
           ) : (
-            <p className="text-center">
-              <strong>No Plans Yet!</strong>
-            </p>
+            <p className="text-center mt-5 font-bold">No Plans Yet!</p>
           )}
           <Button
             className="text-white"
+            centered
             width={10}
             onClick={() => setIsEditingItem([true, null])}
           >

@@ -23,21 +23,24 @@ const NewItem = (props) => {
     popArrItem,
     pushArrItem,
     setFormData,
-  ] = useForm({
-    title: {
-      value: "",
-      isValid: false,
-    },
-    steps: {
-      value: [["", []]],
-      isValid: false,
-    },
+  ] = useForm(
+    {
+      title: {
+        value: "",
+        isValid: false,
+      },
+      steps: {
+        value: [["", []]],
+        isValid: false,
+      },
 
-    due: {
-      value: "",
-      isValid: false,
+      due: {
+        value: "",
+        isValid: false,
+      },
     },
-  });
+    false
+  );
 
   const { itemData, modalIsOpen } = props;
 
@@ -126,10 +129,6 @@ const NewItem = (props) => {
     );
   }, [setFormData]);
 
-  useEffect(() => {
-    console.log("formstate: ", formState);
-  }, [formState]);
-
   const editInputs = (action, validators, coord) => {
     switch (action) {
       case "PUSH":
@@ -143,68 +142,82 @@ const NewItem = (props) => {
     }
   };
 
+  useEffect(() => {
+    console.log("formState: ", formState);
+  }, [formState]);
+
   return (
     <form
-      className="flex flex-col jusitfy-center space-y-1 pt-2 overflow-hidden"
+      className="flex flex-col jusitfy-center space-y-5 p-5"
       onSubmit={itemSubmitHandler}
     >
-      <p className="font-semibold mb-0">Title:</p>
-      <Input
-        onClear={onClear}
-        id="title"
-        element="input"
-        type="text"
-        validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid title."
-        onInput={inputHandler}
-        clear={clearInputs}
-        initialValue={itemData && itemData.title}
-        initialValid={itemData && true}
-      />
-      <div className="flex items-center pt-2">
-        <p className="font-semibold mr-4">Steps:</p>
-        <AddRemoveButtons
-          onClickAdd={() => editInputs("PUSH", null, [])}
-          addTip={"Add a step"}
-          onClickRemove={() =>
-            formState.inputs.steps.value.length !== 0 &&
-            editInputs("POP", stepValidators, [])
-          }
-          removeTip={"Remove a step"}
+      <div className="flex-shrink">
+        <p className="font-semibold mb-1">Title:</p>
+        <Input
+          onClear={onClear}
+          id="title"
+          element="input"
+          type="text"
+          validators={[VALIDATOR_REQUIRE()]}
+          errorText="Please enter a valid title."
+          onInput={inputHandler}
+          clear={clearInputs}
+          initialValue={itemData && itemData.title}
+          initialValid={itemData ? true : false}
         />
       </div>
       <div>
-        <NestedInputs
-          clear={clearInputs}
+        <div className="flex items-center mb-1">
+          <p className="font-semibold mr-4">Steps:</p>
+          <AddRemoveButtons
+            onClickAdd={() => editInputs("PUSH", null, [])}
+            addTip={"Add a step"}
+            onClickRemove={() =>
+              formState.inputs.steps.value.length !== 0 &&
+              editInputs("POP", stepValidators, [])
+            }
+            removeTip={"Remove a step"}
+          />
+        </div>
+        <div>
+          <NestedInputs
+            clear={clearInputs}
+            onClear={onClear}
+            formState={formState.inputs.steps.value}
+            id="steps"
+            element="textarea"
+            type="text"
+            onInput={inputHandler}
+            errorText={"Enter a valid step (min. 5 characters)"}
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
+            editInput={editInputs}
+            useInitValue={!!itemData}
+          />
+        </div>
+      </div>
+      <div>
+        <p className="font-semibold mb-1">Complete by:</p>
+        <Input
           onClear={onClear}
-          formState={formState.inputs.steps.value}
-          id="steps"
-          element="textarea"
-          type="text"
+          id="due"
+          element="date"
+          validators={[VALIDATOR_REQUIRE()]}
           onInput={inputHandler}
-          errorText={"Enter a valid step (min. 5 characters)"}
-          validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
-          editInput={editInputs}
-          useInitValue={!!itemData}
+          clear={clearInputs}
+          initialValue={
+            itemData &&
+            new Date(
+              itemData.due[0],
+              itemData.due[1],
+              itemData.due[2]
+            ).getTime()
+          }
+          initialValid={itemData ? true : false}
         />
       </div>
-      <p className="font-semibold mb-0">Complete by:</p>
-      <Input
-        onClear={onClear}
-        id="due"
-        element="date"
-        validators={[VALIDATOR_REQUIRE()]}
-        onInput={inputHandler}
-        clear={clearInputs}
-        initialValue={
-          itemData &&
-          new Date(itemData.due[0], itemData.due[1], itemData.due[2]).getTime()
-        }
-        initialValid={itemData && true}
-      />
-      <div className="flex pt-2 justify-center">
+      <div className="flex pt-2 justify-start">
         <Button
-          width="1/3"
+          width="30"
           onClick={itemSubmitHandler}
           type="submit"
           disabled={!formState.isValid}
