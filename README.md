@@ -22,7 +22,7 @@ I have taken these ideas and methods and created a MERN Fullstack web app with t
 2.  ~~Add item functionality~~
 3.  ~~Delete item functionality~~
 4.  ~~Edit item functionality~~
-5.  Nested steps for displaying, editing and adding
+5.  Nested steps for ~~displaying~~, editing and adding
 6.  Ability to tag items (e.g. essential, urgent)
 7.  Filtering of the list/search bar
 8.  Notepad for rough ideas
@@ -31,7 +31,3 @@ I have taken these ideas and methods and created a MERN Fullstack web app with t
 11. Ability to add plans to calendar
 12. Filtering for calendar
 13. TBC...
-
-## LICENCE
-
-None
