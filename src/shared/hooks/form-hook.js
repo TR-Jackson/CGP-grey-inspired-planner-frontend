@@ -1,7 +1,6 @@
 import { useCallback, useReducer } from "react";
 
 import { validate } from "../util/validators";
-import { dateToArray } from "../util/helper-functions";
 
 const checkFormValidity = (state, action) => {
   let formIsValid = true;
@@ -16,23 +15,33 @@ const checkFormValidity = (state, action) => {
 };
 
 const formReducer = (state, action) => {
+  let updatedArray;
+  let arrayRef = "updatedArray";
+  let inputCoord = [];
   switch (action.type) {
     case "INPUT_CHANGE":
-      const updatedSteps = state.inputs[action.inputId].value;
-      if (action.stepId !== undefined) {
-        updatedSteps[action.stepId] = action.value;
+      if (action.inputCoord) {
+        updatedArray = JSON.parse(
+          JSON.stringify(state.inputs[action.inputId].value)
+        );
+        action.inputCoord.forEach((coord, i) => {
+          if (i !== action.inputCoord.length - 1) {
+            arrayRef = arrayRef.concat("[", coord, "][1]");
+          } else {
+            arrayRef = arrayRef.concat("[", coord, "][0]");
+          }
+        });
+
+        // eslint-disable-next-line
+        eval(`${arrayRef} = action.value`);
       }
+
       return {
         ...state,
         inputs: {
           ...state.inputs,
           [action.inputId]: {
-            value:
-              action.inputId === "due"
-                ? dateToArray(action.value)
-                : action.inputId === "steps"
-                ? updatedSteps
-                : action.value,
+            value: action.inputId === "steps" ? updatedArray : action.value,
             isValid: action.isValid,
           },
         },
@@ -43,16 +52,59 @@ const formReducer = (state, action) => {
         inputs: action.inputs,
         isValid: action.formIsValid,
       };
-    case "DELETE_ARR_ITEM":
-      const updatedArr = state.inputs[action.inputId].value;
-      updatedArr.splice(-1, 1);
-      const arrIsValid = validate(updatedArr, action.validators);
+    case "PUSH_ARR":
+      updatedArray = JSON.parse(
+        JSON.stringify(state.inputs[action.inputId].value)
+      );
+
+      inputCoord = [...action.inputCoord];
+
+      inputCoord &&
+        inputCoord.forEach((i) => {
+          arrayRef = arrayRef.concat("[", i, "][1]");
+        });
+
+      // eslint-disable-next-line
+      eval(`${arrayRef}.push(["", []])`);
+      return {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.inputId]: {
+            value: updatedArray,
+            isValid: false,
+          },
+        },
+        isValid: false,
+      };
+
+    case "POP_ARR":
+      updatedArray = JSON.parse(
+        JSON.stringify(state.inputs[action.inputId].value)
+      );
+
+      inputCoord = [...action.inputCoord];
+
+      inputCoord.forEach((i) => {
+        arrayRef = arrayRef.concat("[", i, "][1]");
+      });
+
+      // eslint-disable-next-line
+      eval(`${arrayRef}.pop()`);
+
+      const arrIsValid = validate(
+        updatedArray,
+        action.validators,
+        "FLAT",
+        null
+      );
+
       const updatedForm = {
         ...state,
         inputs: {
           ...state.inputs,
           [action.inputId]: {
-            value: updatedArr,
+            value: updatedArray,
             isValid: arrIsValid,
           },
         },
@@ -71,13 +123,13 @@ export const useForm = (initialInputs, initialFormIsValid) => {
     isValid: initialFormIsValid,
   });
 
-  const inputHandler = useCallback((id, value, isValid, stepId) => {
+  const inputHandler = useCallback((id, value, isValid, inputCoord) => {
     dispatch({
       type: "INPUT_CHANGE",
       value: value,
       isValid: isValid,
       inputId: id,
-      stepId: stepId,
+      inputCoord: inputCoord,
     });
   }, []);
 
@@ -89,14 +141,22 @@ export const useForm = (initialInputs, initialFormIsValid) => {
     });
   }, []);
 
-  const removeArrItem = useCallback((id, validators, currCount) => {
+  const popArr = useCallback((id, validators, inputCoord) => {
     dispatch({
-      type: "DELETE_ARR_ITEM",
+      type: "POP_ARR",
       inputId: id,
       validators: validators,
-      currCount: currCount,
+      inputCoord: inputCoord,
     });
   }, []);
 
-  return [formState, inputHandler, removeArrItem, setFormData];
+  const pushArr = useCallback((id, inputCoord) => {
+    dispatch({
+      type: "PUSH_ARR",
+      inputId: id,
+      inputCoord: inputCoord,
+    });
+  }, []);
+
+  return [formState, inputHandler, popArr, pushArr, setFormData];
 };

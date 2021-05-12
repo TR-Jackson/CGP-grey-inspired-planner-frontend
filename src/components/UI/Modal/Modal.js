@@ -1,21 +1,18 @@
 import React from "react";
 
-import "./Modal.css";
 import Backdrop from "../Backdrop/Backdrop";
 
 const Modal = (props) => {
   return (
-    <div>
-      <Backdrop show={props.show} clicked={props.modalClosed} />
+    <div className="flex justify-center">
       <div
-        className={`Modal ${props.scroll ? "scroll" : "no-scroll"}`}
-        style={{
-          transform: props.show ? "translateY(0)" : "translateY(-100vh)",
-          opacity: props.show ? "1" : "0",
-        }}
+        className={`absolute object-center transform duration-400 ease-in-out transition-all ${
+          props.show ? "opacity-100" : "opacity-0"
+        }  bg-gray-100 z-50 w-4/5 h-auto min-w-3/5 w-auto max-w-60 max-h-3/4 px-8 py-2 rounded-2xl shadow-sm overflow-auto`}
       >
         {props.children}
       </div>
+      <Backdrop show={props.show} clicked={props.modalClosed} />
     </div>
   );
 };

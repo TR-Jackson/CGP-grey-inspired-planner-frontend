@@ -20,10 +20,29 @@ export const VALIDATOR_MIN = (val) => ({ type: VALIDATOR_TYPE_MIN, val: val });
 export const VALIDATOR_MAX = (val) => ({ type: VALIDATOR_TYPE_MAX, val: val });
 export const VALIDATOR_EMAIL = () => ({ type: VALIDATOR_TYPE_EMAIL });
 
-export const validate = (value, validators) => {
+export const validate = (value, validators, action) => {
   let isValid = true;
-  if (typeof value === "object") {
-    for (const item of value) {
+  let array;
+  if (Array.isArray(value)) {
+    array = [...value];
+  }
+
+  switch (action) {
+    case "FLAT":
+      let prev_length = array.length;
+      let curr_length = array.length;
+      do {
+        array = array.flat();
+        prev_length = curr_length;
+        curr_length = array.length;
+      } while (curr_length > prev_length);
+      break;
+    default:
+      break;
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of array) {
       for (const validator of validators) {
         if (validator.type === VALIDATOR_TYPE_REQUIRE) {
           isValid = isValid && item.trim().length > 0;
@@ -45,7 +64,10 @@ export const validate = (value, validators) => {
         }
       }
     }
-  } else if (typeof value === "string") {
+  } else {
+    if (typeof value === "number") {
+      value = value.toString();
+    }
     for (const validator of validators) {
       if (validator.type === VALIDATOR_TYPE_REQUIRE) {
         isValid = isValid && value.trim().length > 0;

@@ -3,20 +3,15 @@ import { Redirect, Route } from "react-router-dom";
 
 import List from "./containers/List/List";
 import Navigation from "./components/Navigation/Navigation";
-import "./App.css";
 
 const App = () => {
   return (
-    <React.Fragment>
+    <div className="min-h-screen">
       <Navigation />
-      <main>
-        <Route path="/" component={List} exact />
-        <Redirect to="/" />
-      </main>
-    </React.Fragment>
+      <Route path="/" component={List} exact />
+      <Redirect to="/" />
+    </div>
   );
 };
-
-// fix formstate for steps
 
 export default App;

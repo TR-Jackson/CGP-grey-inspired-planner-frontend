@@ -1,21 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import "./Navigation.css";
-
 const Navigation = (props) => {
   return (
-    <header className="main-header">
-      <nav>
-        <ul>
-          <li>
-            <NavLink to="/" exact>
-              Home
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <div className="bg-gradient-to-r from-blue-700 to-blue-300 w-full h-12 flex justify-center shadow-sm fixed">
+      <NavLink
+        className="inline-block cursor-pointer text-bold text-white p-3 hover:text-gray-200"
+        to="/"
+        exact
+      >
+        Home
+      </NavLink>
+    </div>
   );
 };
 
