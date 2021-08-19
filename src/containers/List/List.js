@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "../../axios-planner";
 
 import DeleteItem from "../../components/DeleteItem/DeleteItem";
@@ -14,6 +15,9 @@ const List = (props) => {
   const [isEditingItem, setIsEditingItem] = useState([false, null]);
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState([]);
+  const isLoggedIn = useState(
+    !!document.cookie.match(/^(.*;)?\s*token\s*=\s*[^;]+(.*)?$/)
+  )[0];
 
   useEffect(() => {
     axios
@@ -52,9 +56,8 @@ const List = (props) => {
         setList(updatedList);
         break;
       case "UPDATE":
-        updatedList[
-          updatedList.findIndex((item) => item._id === newItem._id)
-        ] = newItem;
+        updatedList[updatedList.findIndex((item) => item._id === newItem._id)] =
+          newItem;
         setList(updatedList);
         break;
       default:
@@ -108,40 +111,53 @@ const List = (props) => {
                 />
               );
             })
-          ) : (
+          ) : isLoggedIn ? (
             <p className="text-center mt-5 font-bold">No Plans Yet!</p>
+          ) : (
+            <p className="text-center mt-5 font-bold">Please log in</p>
           )}
-          <Button
-            className="text-white"
-            centered
-            width={10}
-            onClick={() => setIsEditingItem([true, null])}
-          >
-            ADD ITEM
-          </Button>
-          <Modal
-            scroll
-            show={isEditingItem[0]}
-            modalClosed={() => setIsEditingItem([false, null])}
-          >
-            <UpdateItem
-              setIsLoading={setIsLoading}
-              onPostHandler={onPostHandler}
-              itemData={
-                isEditingItem[0]
-                  ? list.find((item) => item._id === isEditingItem[1])
-                  : null
-              }
-              closeModal={() => setIsEditingItem([false, null])}
-              modalIsOpen={isEditingItem[0]}
-            />
-          </Modal>
-          <Modal
-            show={isDeleting[0]}
-            modalClosed={() => setIsDeleting([false, null])}
-          >
-            <DeleteItem onClick={onDeleteHandler} />
-          </Modal>
+          {isLoggedIn ? (
+            <>
+              <Button
+                className="text-white"
+                centered
+                width={10}
+                onClick={() => setIsEditingItem([true, null])}
+              >
+                ADD ITEM
+              </Button>
+              <Modal
+                scroll
+                show={isEditingItem[0]}
+                modalClosed={() => setIsEditingItem([false, null])}
+              >
+                <UpdateItem
+                  setIsLoading={setIsLoading}
+                  onPostHandler={onPostHandler}
+                  itemData={
+                    isEditingItem[0]
+                      ? list.find((item) => item._id === isEditingItem[1])
+                      : null
+                  }
+                  closeModal={() => setIsEditingItem([false, null])}
+                  modalIsOpen={isEditingItem[0]}
+                />
+              </Modal>
+              <Modal
+                show={isDeleting[0]}
+                modalClosed={() => setIsDeleting([false, null])}
+              >
+                <DeleteItem onClick={onDeleteHandler} />
+              </Modal>
+            </>
+          ) : (
+            <Link
+              className="m-auto p-2 px-5 text-gray-100 bg-blue-400 rounded-md hover:bg-blue-300"
+              to="/login"
+            >
+              Log In
+            </Link>
+          )}
         </div>
       </div>
     );
